@@ -1,0 +1,36 @@
+.dashboard-container {
+background: linear-gradient(180deg, #0f172a 0%, #111827 60%, #0b1220 100%);
+
+   
+  min-height: 100vh;
+
+  padding: 28px;
+}
+
+.kpi-grid {
+  margin-top: 20px;
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+
+  gap: 20px;
+}
+
+.widgets-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: stretch;
+}
+
+.ai-widget {
+    margin-top: 24px;
+}
+
+@media (max-width: 1200px) {
+    .widgets-grid {
+        grid-template-columns: 1fr;
+    }
+}

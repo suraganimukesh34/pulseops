@@ -1,0 +1,168 @@
+
+:host {
+display: block;
+}
+
+.header {
+margin-bottom: 28px;
+}
+
+.title {
+display: flex;
+align-items: center;
+gap: 14px;
+}
+
+.widget-icon {
+
+width: 44px;
+height: 44px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+border-radius: 12px;
+
+background: rgba(59,130,246,.15);
+
+border: 1px solid rgba(59,130,246,.25);
+
+}
+
+.widget-icon mat-icon {
+color: var(--info);
+}
+
+.title h3 {
+
+margin: 0;
+
+color: var(--text-primary);
+
+font-size: 20px;
+
+font-weight: 600;
+
+}
+
+.title span {
+
+color: var(--text-secondary);
+
+font-size: 13px;
+
+}
+
+.occupancy-value {
+
+font-size: 48px;
+
+font-weight: 700;
+
+color: var(--text-primary);
+
+text-align: center;
+
+}
+
+.occupancy-value span {
+
+font-size: 20px;
+
+color: var(--text-secondary);
+
+}
+
+.percentage {
+
+text-align: center;
+
+color: var(--text-secondary);
+
+margin: 10px 0 24px;
+
+}
+
+.progress {
+
+height: 12px;
+
+border-radius: 12px;
+
+overflow: hidden;
+
+background: rgba(255,255,255,.08);
+
+margin-bottom: 28px;
+
+}
+
+.progress-value {
+
+height: 100%;
+
+border-radius: inherit;
+
+background: linear-gradient(
+90deg,
+#2563EB,
+#3B82F6
+);
+
+}
+
+.stats {
+
+display: flex;
+
+flex-direction: column;
+
+gap: 16px;
+
+}
+
+.stat {
+
+display: flex;
+
+align-items: center;
+
+gap: 12px;
+
+}
+
+.stat span {
+
+flex: 1;
+
+color: var(--text-secondary);
+
+}
+
+.stat strong {
+
+color: var(--text-primary);
+
+}
+
+.dot {
+
+width: 10px;
+height: 10px;
+
+border-radius: 50%;
+
+}
+
+.success {
+background: var(--success);
+}
+
+.primary {
+background: var(--primary);
+}
+
+.muted {
+background: #94A3B8;
+}

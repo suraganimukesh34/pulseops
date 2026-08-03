@@ -1,0 +1,163 @@
+<div class="table-card">
+
+    <!-- Header -->
+
+    <div class="table-header">
+
+        <div>
+
+            <h2>{{ title }}</h2>
+
+            <p>{{ subtitle }}</p>
+
+        </div>
+
+        <button class="primary-btn">
+
+            Add
+
+        </button>
+
+    </div>
+
+    <!-- Toolbar -->
+
+    <div class="table-toolbar">
+
+        <div class="search-box">
+
+            <mat-icon>
+
+                search
+
+            </mat-icon>
+
+            <input type="text" placeholder="Search..." />
+
+        </div>
+
+        <div class="toolbar-actions">
+
+            <button>
+
+                Filter
+
+            </button>
+
+            <button>
+
+                Export
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Table -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Name</th>
+
+                    <th>Department</th>
+
+                    <th>Status</th>
+
+                    <th>Priority</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td>P1001</td>
+
+                    <td>John Doe</td>
+
+                    <td>ICU</td>
+
+                    <td>
+
+                        <span class="status critical">
+
+                            Critical
+
+                        </span>
+
+                    </td>
+
+                    <td>High</td>
+
+                    <td>
+
+                        <mat-icon>
+
+                            visibility
+
+                        </mat-icon>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>P1002</td>
+
+                    <td>Sarah Kim</td>
+
+                    <td>Cardiology</td>
+
+                    <td>
+
+                        <span class="status stable">
+
+                            Stable
+
+                        </span>
+
+                    </td>
+
+                    <td>Medium</td>
+
+                    <td>
+
+                        <mat-icon>
+
+                            visibility
+
+                        </mat-icon>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Footer -->
+
+    <div class="table-footer">
+
+        Showing 1–10 of 1248 Patients
+
+    </div>
+
+</div>

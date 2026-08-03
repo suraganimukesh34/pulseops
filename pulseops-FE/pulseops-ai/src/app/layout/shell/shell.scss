@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+
+  height: 100vh;
+
+  background: #0A0F1A;
+}
+
+.sidebar {
+  background: #111827;
+
+  border-right: 1px solid var(--border);
+
+  overflow: hidden;
+}
+
+.main-content {
+  display: flex;
+
+  flex-direction: column;
+  overflow: auto;
+  min-width: 0;
+}
+
+.topbar {
+  height: 64px;
+
+  background: #161F2F;
+
+  border-bottom: 1px solid var(--border);
+
+  z-index: 100;
+}
+
+.page-content {
+  flex: 1;
+
+  overflow: auto;
+
+  padding: 10px 2px;
+
+  background: var(--background);
+}

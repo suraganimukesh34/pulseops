@@ -1,0 +1,94 @@
+:host {
+  display: block;
+}
+
+.header {
+  margin-bottom: 28px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.widget-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: rgba(99, 102, 241, 0.15);
+
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+.widget-icon mat-icon {
+  color: #818cf8;
+}
+
+.title h3 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-size: 20px;
+
+  font-weight: 600;
+}
+
+.title span {
+  color: var(--text-secondary);
+
+  font-size: 13px;
+}
+
+.department-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.department-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 8px;
+}
+
+.department-name {
+  color: var(--text-primary);
+
+  font-weight: 500;
+}
+
+.department-header strong {
+  color: var(--text-primary);
+}
+
+.progress {
+  height: 10px;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.progress-value {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+}

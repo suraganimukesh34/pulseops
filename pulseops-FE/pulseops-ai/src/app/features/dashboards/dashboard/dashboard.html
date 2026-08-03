@@ -1,0 +1,19 @@
+<div class="dashboard-container">
+
+    <div class="kpi-grid">
+        <app-kpi-card *ngFor="let card of kpis" [card]=card></app-kpi-card>
+
+    </div>
+
+    <div class="widgets-grid">
+        <app-hospital-status></app-hospital-status>
+        <app-bed-occupancy></app-bed-occupancy>
+        <app-active-alerts></app-active-alerts>
+        <app-department-load></app-department-load>
+        
+    </div>
+    <div class="ai-widget">
+        <app-ai-recommendation></app-ai-recommendation>
+    </div>
+
+</div>

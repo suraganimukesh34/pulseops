@@ -1,0 +1,67 @@
+<app-dashboard-card>
+
+    <div class="header">
+
+        <div class="title">
+
+            <div class="status-dot"></div>
+
+            <div>
+
+                <h3>Hospital Operational Status</h3>
+
+                <span>Operational Health</span>
+
+            </div>
+
+        </div>
+
+        <small>
+            Updated {{ lastUpdated }}
+        </small>
+
+    </div>
+
+    <div class="score">
+
+        {{ healthScore }}%
+
+    </div>
+
+    <div class="progress">
+
+        <div class="progress-value" [style.width.%]="healthScore">
+
+        </div>
+
+    </div>
+
+    <div class="checks">
+
+        <div class="check" *ngFor="let item of checks">
+
+            <mat-icon>
+
+                check_circle
+
+            </mat-icon>
+
+            <span>
+
+                {{ item }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+
+        <span>Status</span>
+        
+        <strong>Operational</strong>
+
+    </div>
+
+</app-dashboard-card>

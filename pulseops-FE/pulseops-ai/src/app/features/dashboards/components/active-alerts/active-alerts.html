@@ -1,0 +1,48 @@
+<app-dashboard-card>
+
+    <div class="header">
+
+        <div class="title">
+            <div class="widget-icon">
+                 <mat-icon>warning_amber</mat-icon>
+            </div>
+
+            <div>
+                <h3>Active Alerts</h3>
+                <span>{{ alerts.length }} Open Alerts</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="alert-list">
+
+        <div class="alert-item" *ngFor="let alert of alerts">
+
+            <div class="severity-dot" [ngClass]="alert.severity">
+            </div>
+
+            <div class="content">
+
+                <div class="alert-title">
+                    {{ alert.title }}
+                </div>
+
+                <div class="alert-description">
+                    {{ alert.description }}
+                </div>
+
+            </div>
+
+            <mat-icon class="arrow">
+
+                chevron_right
+
+            </mat-icon>
+
+        </div>
+
+    </div>
+
+</app-dashboard-card>

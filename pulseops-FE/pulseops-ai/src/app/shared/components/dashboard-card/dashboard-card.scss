@@ -1,0 +1,23 @@
+.dashboard-card {
+  background:linear-gradient(180deg, #1E293B,#22324A);
+  border: 1px solid #334155;
+  border-radius: 18px;
+
+  padding: 20px;
+
+  transition: all 0.25s ease;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+height: 100%;
+  min-height: 100px;
+
+  cursor: default;
+}
+
+.dashboard-card:hover {
+  border-color: #3b82f6;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}

@@ -1,0 +1,53 @@
+<app-dashboard-card>
+
+    <div class="header">
+
+        <div class="title">
+
+            <div class="widget-icon">
+
+                <mat-icon>bar_chart</mat-icon>
+
+            </div>
+
+            <div>
+
+                <h3>Department Load</h3>
+
+                <span>Live Department Utilization</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="department-list">
+
+        <div class="department" *ngFor="let dept of departments">
+
+            <div class="department-header">
+
+                <span class="department-name">
+                    {{ dept.name }}
+                </span>
+
+                <strong>
+                    {{ dept.load }}%
+                </strong>
+
+            </div>
+
+            <div class="progress">
+
+                <div class="progress-value" [style.width.%]="dept.load">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</app-dashboard-card>

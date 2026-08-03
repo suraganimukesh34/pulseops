@@ -1,0 +1,132 @@
+.navbar {
+  height: 72px;
+
+  padding: 0 28px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  background: #161F2F;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  color: white;
+
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+
+.page-info {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.page-info h2 {
+  margin: 0;
+
+  font-size: 24px;
+
+  font-weight: 700;
+}
+
+.page-info span {
+  margin-top: 4px;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+.navbar-right {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+}
+
+.search-box {
+  width: 340px;
+
+  height: 44px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 16px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 12px;
+
+  transition: 0.25s;
+}
+
+.search-box:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.search-box mat-icon {
+  color: #94a3b8;
+}
+
+.search-box input {
+  flex: 1;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 14px;
+}
+
+.search-box input::placeholder {
+  color: #64748b;
+}
+
+.icon-btn {
+  color: white;
+
+  border-radius: 12px;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
+.page-title {
+
+display: flex;
+flex-direction: column;
+gap: 2px;
+
+}
+
+.page-title h1 {
+
+margin: 0;
+font-size: 20px;
+font-weight: 700;
+color: var(--text-primary);
+
+}
+
+.page-title span {
+
+font-size: 13px;
+color: var(--text-secondary);
+
+}
