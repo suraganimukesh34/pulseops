@@ -109,5 +109,15 @@ mat-card{
 border-radius:var(--radius);
 }
 
+.pulseops-dialog {
+  --mdc-dialog-container-shape: 16px;
+}
+
+.pulseops-dialog .mat-mdc-dialog-conatiner {
+  border-radius: 16px;
+}
+
+
+
 
 

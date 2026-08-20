@@ -32,6 +32,22 @@
   margin-bottom: 20px;
 }
 
+.add-patient-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--info);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.add-patient-btn:hover {
+  opacity: 0.9;
+}
+
 .table-header h2 {
   margin: 0;
 

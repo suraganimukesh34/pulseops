@@ -1,80 +1,23 @@
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Patient } from '../models/patient.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PatientService {
 
-    getPatients(): Patient[] {
+    private readonly apiUrl = 'http://127.0.0.1:8000/patients';
+    private readonly http = inject(HttpClient);
 
-        return [
+    getPatients(): Observable<Patient[]> {
+        return this.http.get<Patient[]>(this.apiUrl)
+    }
 
-            {
-                id: 'P1001',
-                name: 'John Doe',
-                age: 45,
-                gender: 'Male',
-                department: 'ICU',
-                ward: 'Ward A',
-                bed: 'ICU-12',
-                doctor: 'Dr. Smith',
-                nurse: 'Emily',
-                status: 'Critical',
-                priority: 'High',
-                admissionTime: '09:20 AM',
-                expectedDischarge: '05 Aug'
-            },
-            {
-                id: 'P1002',
-                name: 'Max ',
-                age: 45,
-                gender: 'Male',
-                department: 'ICU',
-                ward: 'Ward A',
-                bed: 'ICU-12',
-                doctor: 'Dr. Smith',
-                nurse: 'Emily',
-                status: 'Critical',
-                priority: 'High',
-                admissionTime: '09:20 AM',
-                expectedDischarge: '05 Aug'
-            },
-            {
-                id: 'P1003',
-                name: 'Mike',
-                age: 45,
-                gender: 'Male',
-                department: 'ICU',
-                ward: 'Ward A',
-                bed: 'ICU-12',
-                doctor: 'Dr. Smith',
-                nurse: 'Emily',
-                status: 'Critical',
-                priority: 'High',
-                admissionTime: '09:20 AM',
-                expectedDischarge: '05 Aug'
-            },
-
-            {
-                id: 'P1004',
-                name: 'Sarah Kim',
-                age: 29,
-                gender: 'Female',
-                department: 'Cardiology',
-                ward: 'Ward C',
-                bed: 'C-210',
-                doctor: 'Dr. Wilson',
-                nurse: 'Anna',
-                status: 'Stable',
-                priority: 'Medium',
-                admissionTime: '11:10 AM',
-                expectedDischarge: '06 Aug'
-            }
-
-        ];
-
+    createPatient(patient: Omit<Patient, 'id'>): Observable<Patient> {
+        return this.http.post<Patient>(this.apiUrl, patient)
     }
 
 }

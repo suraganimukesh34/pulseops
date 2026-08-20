@@ -4,26 +4,15 @@ export interface Patient {
 
     name: string;
 
-    age: number;
-
-    gender: 'Male' | 'Female';
-
     department: string;
 
     ward: string;
 
     bed: string;
 
-    doctor: string;
+    status: string;
 
-    nurse: string;
+    priority: string;
 
-    status: 'Critical' | 'Stable' | 'Waiting';
-
-    priority: 'High' | 'Medium' | 'Low';
-
-    admissionTime: string;
-
-    expectedDischarge: string;
-
+   
 }

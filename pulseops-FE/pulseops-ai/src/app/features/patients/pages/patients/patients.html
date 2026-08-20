@@ -24,13 +24,20 @@
     <div class="patient-table">
 
         <div class="table-header">
+            <div>
+                <h2>Patient List</h2>
 
-            <h2>Patient List</h2>
+                <span>{{ patientsCount }} Patients</span>
+            </div>
 
-            <span>{{ patientsCount }} Patients</span>
-
+            <button 
+                class="add-patient-btn"
+                type="button"
+                (click)="openAddPatientDialog()"
+            >
+                + Add Patient
+            </button>
         </div>
-
         <table mat-table [dataSource]="dataSource">
 
             <!-- Patient ID -->

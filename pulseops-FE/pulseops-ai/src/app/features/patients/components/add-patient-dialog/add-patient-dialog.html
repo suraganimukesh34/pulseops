@@ -1,0 +1,126 @@
+<h2 mat-dialog-title>Add New Patient</h2>
+
+<mat-dialog-content>
+    <form class="patient-form" [formGroup]="patientForm">
+
+        <!-- Patient Name -->
+        <mat-form-field appearance="outline">
+            <mat-label>Patient Name</mat-label>
+            <input matInput placeholder="Enter patient name" formControlName="name"/>
+
+            @if (
+                patientForm.controls.name.touched && 
+                patientForm.controls.name.hasError('required')
+            ) {
+                <mat-error>
+                    Patient name is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <!-- Department -->
+        <mat-form-field appearance="outline">
+            <mat-label>Department</mat-label>
+            <input matInput placeholder="Enter department" formControlName="department" />
+
+            @if (
+                patientForm.controls.department.touched && 
+                patientForm.controls.department.hasError('required')
+            ) {
+                <mat-error>
+                    Department is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <!-- Ward -->
+        <mat-form-field appearance="outline">
+            <mat-label>Ward</mat-label>
+            <input matInput placeholder="Enter ward" formControlName="ward"/>
+
+            
+            @if (
+                patientForm.controls.ward.touched && 
+                patientForm.controls.ward.hasError('required')
+            ) {
+                <mat-error>
+                    Ward is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <!-- Bed -->
+        <mat-form-field appearance="outline">
+            <mat-label>Bed</mat-label>
+            <input matInput placeholder="Enter bed number" formControlName="bed"/>
+
+            
+            @if (
+                patientForm.controls.bed.touched && 
+                patientForm.controls.bed.hasError('required')
+            ) {
+                <mat-error>
+                   Bed is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <!-- Status -->
+        <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+
+            <mat-select formControlName="status">
+                <mat-option value="Critical">Critical</mat-option>
+                <mat-option value="Waiting">Waiting</mat-option>
+                <mat-option value="Stable">Stable</mat-option>
+            </mat-select>
+
+            
+            @if (
+                patientForm.controls.status.touched && 
+                patientForm.controls.status.hasError('required')
+            ) {
+                <mat-error>
+                    Status is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <!-- Priority -->
+        <mat-form-field appearance="outline">
+            <mat-label>Priority</mat-label>
+
+            <mat-select formControlName="priority">
+                <mat-option value="High">High</mat-option>
+                <mat-option value="Medium">Medium</mat-option>
+                <mat-option value="Low">Low</mat-option>
+            </mat-select>
+
+            
+            @if (
+                patientForm.controls.priority.touched && 
+                patientForm.controls.priority.hasError('required')
+            ) {
+                <mat-error>
+                    Priority is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close class="cancel-btn">
+        Cancel
+    </button>
+
+    <button 
+        mat-flat-button 
+        class="add-btn"
+        (click)="addPatient()"
+        [disabled]="patientForm.invalid"
+    >
+        Add Patient
+    </button>
+</mat-dialog-actions>

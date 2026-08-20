@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.patient-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-content {
+  padding: 8px 24px 16px;
+}
+
+mat-dialog-actions {
+  padding: 8px 24px 20px;
+  gap: 12px;
+}
+
+.cancel-btn {
+  color: #64748b;
+}
+
+.add-btn {
+  background: #2563eb;
+  color: white;
+  border-radius: 8px;
+  padding: 0 20px;
+}
+
+.add-btn:hover {
+  background: #1d4ed8;
+}
