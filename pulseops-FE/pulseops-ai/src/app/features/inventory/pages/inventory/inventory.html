@@ -28,6 +28,7 @@
             </button>
         </div>
 
+        <div class="table-scroll">
         <table mat-table [dataSource]="dataSource">
 
             <ng-container matColumnDef="name">
@@ -70,17 +71,21 @@
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef>Action</th>
                 <td mat-cell *matCellDef="let item">
-                    <button type="button" class="submit-button" (click)="openRestockDialog(item)">
-                        Restock
-                    </button>
-                    <button type="button" class="icon-action-btn" aria-label="Edit item"
-                        (click)="openEditItemDialog(item)">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <button type="button" class="icon-action-btn danger" aria-label="Delete item"
-                        (click)="deleteItem(item)">
-                        <mat-icon>delete_outline</mat-icon>
-                    </button>
+                    <div class="row-actions">
+                        <div class="action-slot">
+                        <button type="button" class="row-action-btn primary" (click)="openRestockDialog(item)">
+                            Restock
+                        </button>
+                        </div>
+                        <button type="button" class="icon-action-btn" aria-label="Edit item"
+                            (click)="openEditItemDialog(item)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button type="button" class="icon-action-btn danger" aria-label="Delete item"
+                            (click)="deleteItem(item)">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                    </div>
                 </td>
             </ng-container>
 
@@ -88,6 +93,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
         </table>
+        </div>
 
     </div>
 </div>
