@@ -11,13 +11,20 @@
 
     <div class="navbar-right">
 
-        <div class="search-box">
+        <button type="button" class="search-box" (click)="openPalette()">
 
             <mat-icon>search</mat-icon>
 
-            <input type="text" placeholder="Search patients, beds, staff..." />
+            <span class="search-placeholder">Jump to a page...</span>
 
-        </div>
+            <span class="kbd-hint">Ctrl K</span>
+
+        </button>
+
+        <button mat-icon-button class="icon-btn theme-btn" [matTooltip]="themeLabel" [attr.aria-label]="themeLabel"
+            (click)="cycleTheme()">
+            <mat-icon>{{ themeIcon }}</mat-icon>
+        </button>
 
         <button mat-icon-button class="icon-btn" [matMenuTriggerFor]="alertsMenu"
             [matBadge]="unacknowledgedAlerts.length > 0 ? unacknowledgedAlerts.length : null" matBadgeColor="warn"
@@ -35,7 +42,7 @@
             }
         </mat-menu>
 
-        <button mat-icon-button class="icon-btn" [matMenuTriggerFor]="accountMenu">
+        <button mat-icon-button class="icon-btn account-btn" [matMenuTriggerFor]="accountMenu">
             <mat-icon>account_circle</mat-icon>
         </button>
 

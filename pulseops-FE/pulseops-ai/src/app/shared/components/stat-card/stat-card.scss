@@ -1,13 +1,14 @@
 .stat-card {
-  height: 180px;
+  height: 170px;
 
-  padding: 24px;
+  padding: 22px;
 
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
 
   background: var(--card-bg);
 
   border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
 
   display: flex;
 
@@ -15,13 +16,13 @@
 
   justify-content: space-between;
 
-  transition: 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-lg);
 }
 
 .card-header {
@@ -31,9 +32,9 @@
 }
 
 .icon-container {
-  width: 48px;
+  width: 46px;
 
-  height: 48px;
+  height: 46px;
 
   display: flex;
 
@@ -41,19 +42,20 @@
 
   align-items: center;
 
-  border-radius: 14px;
+  border-radius: var(--radius-md);
 
   border: 1px solid;
 }
 
 .card-title {
-  font-size: 14px;
+  font-size: 13.5px;
 
   color: var(--text-secondary);
 }
 
 .card-value {
-  font-size: 34px;
+  font-family: var(--font-display);
+  font-size: 30px;
 
   font-weight: 700;
 

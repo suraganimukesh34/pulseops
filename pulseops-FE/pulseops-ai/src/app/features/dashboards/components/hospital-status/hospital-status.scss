@@ -33,10 +33,44 @@ height: 14px;
 
 border-radius: 50%;
 
-background: #16A34A;
+}
 
-box-shadow: 0 0 10px rgba(22,163,74,.5);
+/* Fill elements — take a solid background */
+.status-dot.success, .progress-value.success {
+  background: var(--success);
+}
 
+.status-dot.warning, .progress-value.warning {
+  background: var(--warning);
+}
+
+.status-dot.danger, .progress-value.danger {
+  background: var(--danger);
+}
+
+/* Text/icon elements — color only, no background */
+.score.success, .footer strong.success {
+  color: var(--success);
+}
+
+.score.warning, .footer strong.warning {
+  color: var(--warning);
+}
+
+.score.danger, .footer strong.danger {
+  color: var(--danger);
+}
+
+.status-dot.success {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--success) 55%, transparent);
+}
+
+.status-dot.warning {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--warning) 55%, transparent);
+}
+
+.status-dot.danger {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--danger) 55%, transparent);
 }
 
 .title h3 {
@@ -66,14 +100,13 @@ color: var(--text-muted);
 .score {
 
 text-align: center;
+font-family: var(--font-display);
 
 font-size: 54px;
 
 font-weight: 700;
 
 margin: 28px 0;
-
-color: #16A34A;
 
 }
 
@@ -83,7 +116,7 @@ height: 10px;
 
 border-radius: 12px;
 
-background: #E2E8F0;
+background: var(--neutral-soft);
 
 overflow: hidden;
 
@@ -94,12 +127,6 @@ margin-bottom: 28px;
 .progress-value {
 
 height: 100%;
-
-background: linear-gradient(
-90deg,
-#16A34A,
-#22C55E
-);
 
 border-radius: inherit;
 
@@ -128,7 +155,7 @@ gap: 12px;
 
 .check mat-icon {
 
-color: #16A34A;
+color: var(--success);
 
 }
 
@@ -149,8 +176,3 @@ border-top: 1px solid var(--border);
 
 }
 
-.footer strong {
-
-color: #16A34A;
-
-}

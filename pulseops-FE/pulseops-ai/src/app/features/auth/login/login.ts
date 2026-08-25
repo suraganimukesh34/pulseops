@@ -1,7 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../services/auth.service';
 import { CurrentUserService } from '../../../core/services/current-user.service';
+import { BrandingService } from '../../../core/services/branding.service';
 
 import {
   FormBuilder,
@@ -12,11 +14,11 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnInit {
   showPassword = false;
   isLoading = false;
   loginError = '';
@@ -24,6 +26,8 @@ export class Login {
   private fb = inject(FormBuilder);
   private router = inject(Router)
   private currentUserService = inject(CurrentUserService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  readonly branding = inject(BrandingService);
 
   loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -32,6 +36,13 @@ export class Login {
   });
 
   constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.branding.ensureLoaded().subscribe({
+      next: () => this.cdr.detectChanges(),
+      error: () => { /* fall back to defaults already on the service */ },
+    });
+  }
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;

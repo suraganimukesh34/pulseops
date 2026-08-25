@@ -33,6 +33,17 @@ export class HospitalStatus {
     return this.summary?.hospital_status ?? 'Normal';
   }
 
+  get statusClass(): 'success' | 'warning' | 'danger' {
+    switch (this.status) {
+      case 'Critical':
+        return 'danger';
+      case 'Elevated':
+        return 'warning';
+      default:
+        return 'success';
+    }
+  }
+
   get checks(): string[] {
     if (!this.summary) {
       return [];

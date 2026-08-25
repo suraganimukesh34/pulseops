@@ -3,16 +3,18 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 import { SettingsService } from '../../services/settings.service';
 import { UserAccount } from '../../models/settings.model';
 import { PageHeaderService } from '../../../../core/services/page-header';
 import { CurrentUserService } from '../../../../core/services/current-user.service';
+import { BrandingService } from '../../../../core/services/branding.service';
 import { badgeClass } from '../../../../shared/utils/badge.util';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatTabsModule, MatTableModule],
+  imports: [CommonModule, ReactiveFormsModule, MatTabsModule, MatTableModule, MatIconModule],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
@@ -21,6 +23,7 @@ export class SettingsComponent implements OnInit {
   private readonly settingsService = inject(SettingsService);
   readonly currentUser = inject(CurrentUserService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly branding = inject(BrandingService);
 
   badgeClass = badgeClass;
 
@@ -31,12 +34,25 @@ export class SettingsComponent implements OnInit {
   users: UserAccount[] = [];
   userColumns = ['name', 'email', 'role', 'active'];
 
+  readonly logoIconOptions = [
+    'monitor_heart',
+    'local_hospital',
+    'health_and_safety',
+    'medical_services',
+    'favorite',
+    'emergency',
+    'volunteer_activism',
+  ];
+
   readonly profileForm = this.fb.nonNullable.group({
     hospital_name: ['', Validators.required],
     address: ['', Validators.required],
     phone: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     timezone: ['', Validators.required],
+    app_name: ['', Validators.required],
+    logo_icon: ['monitor_heart', Validators.required],
+    accent_color: ['#0d9488', Validators.required],
   });
 
   constructor(private pageHeader: PageHeaderService) {
@@ -85,6 +101,7 @@ export class SettingsComponent implements OnInit {
       next: () => {
         this.isSaving = false;
         this.saveSuccess = true;
+        this.branding.fetch().subscribe();
         this.cdr.detectChanges();
       },
       error: (error) => {

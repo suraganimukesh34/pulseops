@@ -1,13 +1,13 @@
-<div class="sidebar">
+<div class="sidebar" [class.collapsed]="layout.sidenavCollapsed()">
 
     <div class="logo">
 
-        <div class="logo-icon">
-            <mat-icon>monitor_heart</mat-icon>
+        <div class="logo-icon" [style.background]="branding.accentColor() + '1a'" [style.color]="branding.accentColor()">
+            <mat-icon>{{ branding.logoIcon() }}</mat-icon>
         </div>
 
         <div class="logo-text">
-            <h2>PulseOps AI</h2>
+            <h2>{{ branding.appName() }}</h2>
             <span>Hospital Operations</span>
         </div>
 
@@ -19,7 +19,8 @@
             OVERVIEW
         </div>
 
-        <a routerLink="/dashboard" routerLinkActive="active">
+        <a routerLink="/dashboard" routerLinkActive="active" matTooltip="Dashboard"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>dashboard</mat-icon>
 
@@ -27,7 +28,8 @@
 
         </a>
 
-        <a routerLink="/reports" routerLinkActive="active">
+        <a routerLink="/reports" routerLinkActive="active" matTooltip="Reports"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>bar_chart</mat-icon>
 
@@ -39,7 +41,8 @@
             OPERATIONS
         </div>
 
-        <a routerLink="/patients" routerLinkActive="active">
+        <a routerLink="/patients" routerLinkActive="active" matTooltip="Patients"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>groups</mat-icon>
 
@@ -47,7 +50,8 @@
 
         </a>
 
-        <a routerLink="/departments" routerLinkActive="active">
+        <a routerLink="/departments" routerLinkActive="active" matTooltip="Departments"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>apartment</mat-icon>
 
@@ -55,7 +59,8 @@
 
         </a>
 
-        <a routerLink="/appointments" routerLinkActive="active">
+        <a routerLink="/appointments" routerLinkActive="active" matTooltip="Appointments"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>event</mat-icon>
 
@@ -63,7 +68,8 @@
 
         </a>
 
-        <a routerLink="/beds" routerLinkActive="active">
+        <a routerLink="/beds" routerLinkActive="active" matTooltip="Beds"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>bed</mat-icon>
 
@@ -71,7 +77,8 @@
 
         </a>
 
-        <a routerLink="/staff" routerLinkActive="active">
+        <a routerLink="/staff" routerLinkActive="active" matTooltip="Staff"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>badge</mat-icon>
 
@@ -83,7 +90,8 @@
             FINANCE &amp; SUPPLY
         </div>
 
-        <a routerLink="/billing" routerLinkActive="active">
+        <a routerLink="/billing" routerLinkActive="active" matTooltip="Billing"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>receipt_long</mat-icon>
 
@@ -91,7 +99,8 @@
 
         </a>
 
-        <a routerLink="/inventory" routerLinkActive="active">
+        <a routerLink="/inventory" routerLinkActive="active" matTooltip="Inventory"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>inventory_2</mat-icon>
 
@@ -103,7 +112,8 @@
             MONITORING
         </div>
 
-        <a routerLink="/alerts" routerLinkActive="active">
+        <a routerLink="/alerts" routerLinkActive="active" matTooltip="Alerts"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>warning</mat-icon>
 
@@ -111,7 +121,8 @@
 
         </a>
 
-        <a routerLink="/copilot" routerLinkActive="active">
+        <a routerLink="/copilot" routerLinkActive="active" matTooltip="AI Copilot"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>smart_toy</mat-icon>
 
@@ -123,7 +134,8 @@
             SYSTEM
         </div>
 
-        <a routerLink="/settings" routerLinkActive="active">
+        <a routerLink="/settings" routerLinkActive="active" matTooltip="Settings"
+            [matTooltipDisabled]="!layout.sidenavCollapsed()" matTooltipPosition="right">
 
             <mat-icon>settings</mat-icon>
 
@@ -148,6 +160,11 @@
             </div>
 
         </div>
+
+        <button type="button" class="collapse-toggle" (click)="toggleCollapse()"
+            [matTooltip]="layout.sidenavCollapsed() ? 'Expand' : 'Collapse'" matTooltipPosition="right">
+            <mat-icon>{{ layout.sidenavCollapsed() ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+        </button>
 
         <div class="version">
 

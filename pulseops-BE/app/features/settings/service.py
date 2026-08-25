@@ -6,6 +6,9 @@ hospital_profile = HospitalProfile(
     phone="+1 555-010-2000",
     email="contact@pulseops.ai",
     timezone="America/Chicago",
+    app_name="PulseOps AI",
+    logo_icon="monitor_heart",
+    accent_color="#0d9488",
 )
 
 

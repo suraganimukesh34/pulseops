@@ -1,0 +1,31 @@
+<div class="palette">
+
+    <div class="palette-search">
+        <mat-icon>search</mat-icon>
+        <input #queryInput type="text" placeholder="Jump to a page..." [(ngModel)]="query"
+            (ngModelChange)="onQueryChange()" (keydown)="onKeydown($event)" autocomplete="off" />
+        <span class="kbd-hint">Esc</span>
+    </div>
+
+    <div class="palette-results">
+
+        @if (filtered.length === 0) {
+        <div class="palette-empty">No matches for "{{ query }}"</div>
+        }
+
+        @for (group of groups; track group) {
+        <div class="palette-group">
+            <div class="palette-group-label">{{ group }}</div>
+            @for (item of itemsFor(group); track item.path) {
+            <button type="button" class="palette-item" [class.active]="isActive(item)" (click)="select(item)"
+                (mouseenter)="activeIndex = filtered.indexOf(item)">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+            </button>
+            }
+        </div>
+        }
+
+    </div>
+
+</div>

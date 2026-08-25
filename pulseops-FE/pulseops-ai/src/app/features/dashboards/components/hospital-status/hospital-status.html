@@ -4,7 +4,7 @@
 
         <div class="title">
 
-            <div class="status-dot"></div>
+            <div class="status-dot" [ngClass]="statusClass"></div>
 
             <div>
 
@@ -22,7 +22,7 @@
 
     </div>
 
-    <div class="score">
+    <div class="score" [ngClass]="statusClass">
 
         {{ healthScore }}%
 
@@ -30,7 +30,7 @@
 
     <div class="progress">
 
-        <div class="progress-value" [style.width.%]="healthScore">
+        <div class="progress-value" [ngClass]="statusClass" [style.width.%]="healthScore">
 
         </div>
 
@@ -60,7 +60,7 @@
 
         <span>Status</span>
 
-        <strong>{{ status }}</strong>
+        <strong [ngClass]="statusClass">{{ status }}</strong>
 
     </div>
 

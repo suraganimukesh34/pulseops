@@ -39,14 +39,14 @@
 .progress {
   height: 8px;
   border-radius: 999px;
-  background: rgba(148, 163, 184, 0.14);
+  background: var(--neutral-soft);
   overflow: hidden;
 }
 
 .progress-value {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  background: var(--accent-grad);
 }
 
 .billing-row,

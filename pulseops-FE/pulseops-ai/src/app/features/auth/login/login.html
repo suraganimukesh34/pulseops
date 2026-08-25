@@ -1,34 +1,45 @@
 <div class="login-page">
 
-    <div class="login-background">
-        <div class="glow glow-one"></div>
-        <div class="glow glow-two"></div>
-    </div>
+    <section class="brand-panel">
 
-    <main class="login-container">
+        <div class="brand-glow glow-one"></div>
+        <div class="brand-glow glow-two"></div>
 
-        <!-- Branding -->
-        <section class="brand-section">
+        <div class="brand-content">
 
             <div class="brand-logo">
-                <span class="logo-icon">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span>
+                <mat-icon>{{ branding.logoIcon() }}</mat-icon>
             </div>
 
-            <h1>PulseOps <span>AI</span></h1>
+            <h1>{{ branding.appName() }}</h1>
+            <p class="tagline">Hospital Operations Intelligence</p>
 
-            <p>
-                Hospital Operations Intelligence
-            </p>
+            <ul class="feature-list">
+                <li>
+                    <mat-icon>bolt</mat-icon>
+                    <span>Real-time visibility into beds, staff, and patients</span>
+                </li>
+                <li>
+                    <mat-icon>shield</mat-icon>
+                    <span>Role-based access built for clinical teams</span>
+                </li>
+                <li>
+                    <mat-icon>auto_awesome</mat-icon>
+                    <span>An AI-ready platform, previewing what's next</span>
+                </li>
+            </ul>
 
-        </section>
+        </div>
 
-        <!-- Login Card -->
-        <section class="login-card">
+        <footer class="brand-footer">
+            {{ branding.appName() }} &bull; Hospital Operations Platform
+        </footer>
+
+    </section>
+
+    <section class="form-panel">
+
+        <main class="login-container">
 
             <div class="card-header">
                 <h2>Welcome back</h2>
@@ -49,9 +60,7 @@ loginForm.controls.email.invalid &&
 loginForm.controls.email.touched
 ">
 
-                        <span class="input-icon">
-                            @
-                        </span>
+                        <mat-icon class="input-icon">mail</mat-icon>
 
                         <input id="email" type="email" formControlName="email" placeholder="Enter your email"
                             autocomplete="email" />
@@ -94,9 +103,7 @@ loginForm.controls.password.invalid &&
 loginForm.controls.password.touched
 ">
 
-                        <span class="input-icon">
-                            •
-                        </span>
+                        <mat-icon class="input-icon">lock</mat-icon>
 
                         <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
                             placeholder="Enter your password" autocomplete="current-password" />
@@ -145,7 +152,7 @@ showPassword
                 </div>
 
                 @if (loginError) {
-                <div class="error-message">
+                <div class="error-message login-error">
                     {{ loginError }}
                 </div>
                 }
@@ -158,7 +165,7 @@ showPassword
                     Signing in...
                     } @else {
                     Sign in
-                    <span class="arrow">→</span>
+                    <mat-icon class="arrow">arrow_forward</mat-icon>
                     }
 
                 </button>
@@ -166,16 +173,12 @@ showPassword
             </form>
 
             <div class="security-note">
-                <span class="security-icon">✓</span>
-                <span>Secure access to PulseOps AI</span>
+                <mat-icon class="security-icon">verified_user</mat-icon>
+                <span>Secure access to {{ branding.appName() }}</span>
             </div>
 
-        </section>
+        </main>
 
-        <footer>
-            PulseOps AI <span>•</span> Hospital Operations Platform
-        </footer>
-
-    </main>
+    </section>
 
 </div>

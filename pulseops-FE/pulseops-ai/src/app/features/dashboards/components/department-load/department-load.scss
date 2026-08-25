@@ -20,15 +20,15 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 12px;
+  border-radius: var(--radius-md);
 
-  background: rgba(99, 102, 241, 0.15);
+  background: var(--accent-soft-strong);
 
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 .widget-icon mat-icon {
-  color: #818cf8;
+  color: var(--accent);
 }
 
 .title h3 {
@@ -82,7 +82,7 @@
 
   overflow: hidden;
 
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--neutral-soft);
 }
 
 .progress-value {
@@ -90,5 +90,5 @@
 
   border-radius: inherit;
 
-  background: linear-gradient(90deg, #6366f1, #818cf8);
+  background: var(--accent-grad);
 }

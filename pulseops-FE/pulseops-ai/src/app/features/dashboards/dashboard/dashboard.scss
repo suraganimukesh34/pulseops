@@ -1,7 +1,6 @@
 .dashboard-container {
-background: linear-gradient(180deg, #0f172a 0%, #111827 60%, #0b1220 100%);
+  background: var(--page-bg);
 
-   
   min-height: 100vh;
 
   padding: 28px;

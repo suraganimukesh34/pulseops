@@ -1,4 +1,4 @@
-<div class="patients-container">
+<div class="list-page">
     <div class="summary-grid">
 
         <app-stat-card icon="groups" title="Total Patients" [value]="patients.length.toString()"
@@ -21,7 +21,7 @@
 
     </div>
 
-    <div class="patient-table">
+    <div class="list-table">
 
         <div class="table-header">
             <div>
@@ -30,8 +30,8 @@
                 <span>{{ patientsCount }} Patients</span>
             </div>
 
-            <button 
-                class="add-patient-btn"
+            <button
+                class="add-btn"
                 type="button"
                 (click)="openAddPatientDialog()"
             >
@@ -107,7 +107,7 @@
 
             </ng-container>
 
-           
+
             <!-- Status -->
 
             <ng-container matColumnDef="status">
@@ -120,13 +120,9 @@
 
                 <td mat-cell *matCellDef="let patient">
 
-                    <span
-                        class="status-badge"
-                        [ngClass]="'status-' + patient.status.toLowerCase()"
-                    >
+                    <span class="badge" [ngClass]="badgeClass(patient.status)">
                         {{ patient.status }}
                     </span>
-
 
                 </td>
 
@@ -144,14 +140,9 @@
 
                 <td mat-cell *matCellDef="let patient">
 
-                                    
-                    <span
-                        class="priority-badge"
-                        [ngClass]="'priority-' + patient.priority.toLowerCase()"
-                    >
-                    {{ patient.priority }}
+                    <span class="badge" [ngClass]="badgeClass(patient.priority)">
+                        {{ patient.priority }}
                     </span>
-
 
                 </td>
 

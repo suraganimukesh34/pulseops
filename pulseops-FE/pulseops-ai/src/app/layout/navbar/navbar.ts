@@ -8,9 +8,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { PageHeaderService } from '../../core/services/page-header';
 import { CurrentUserService } from '../../core/services/current-user.service';
+import { ThemeService } from '../../core/services/theme.service';
+import { CommandPaletteService } from '../../core/services/command-palette.service';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -33,7 +36,8 @@ interface RawAlert {
     MatInputModule,
     MatFormFieldModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatTooltipModule
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss'
@@ -41,6 +45,12 @@ interface RawAlert {
 export class Navbar implements OnInit {
   pageHeader = inject(PageHeaderService);
   currentUser = inject(CurrentUserService);
+  theme = inject(ThemeService);
+  private readonly commandPalette = inject(CommandPaletteService);
+
+  openPalette(): void {
+    this.commandPalette.open();
+  }
 
   private readonly http = inject(HttpClient);
   private readonly authService = inject(AuthService);
@@ -61,6 +71,32 @@ export class Navbar implements OnInit {
       },
       error: (error) => console.error('Failed to load alerts', error),
     });
+  }
+
+  get themeIcon(): string {
+    switch (this.theme.mode()) {
+      case 'light':
+        return 'light_mode';
+      case 'dark':
+        return 'dark_mode';
+      default:
+        return 'brightness_auto';
+    }
+  }
+
+  get themeLabel(): string {
+    switch (this.theme.mode()) {
+      case 'light':
+        return 'Light theme';
+      case 'dark':
+        return 'Dark theme';
+      default:
+        return 'System theme';
+    }
+  }
+
+  cycleTheme(): void {
+    this.theme.cycle();
   }
 
   logout(): void {

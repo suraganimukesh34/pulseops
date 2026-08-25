@@ -66,15 +66,15 @@ flex-shrink: 0;
 }
 
 .critical {
-background: #DC2626;
+background: var(--danger);
 }
 
 .warning {
-background: #D97706;
+background: var(--warning);
 }
 
 .info {
-background: #2563EB;
+background: var(--info);
 }
 
 .content {
@@ -114,9 +114,9 @@ font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: var(--radius-md);
+    background: var(--warning-soft);
+    border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
     flex-shrink: 0;
 }
 

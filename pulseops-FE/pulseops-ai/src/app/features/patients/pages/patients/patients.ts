@@ -13,6 +13,7 @@ import { AddPatientDialog } from '../../components/add-patient-dialog/add-patien
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { PatientDetails } from '../../components/patient-details/patient-details';
+import { badgeClass } from '../../../../shared/utils/badge.util';
 
 @Component({
   selector: 'app-patients',
@@ -34,6 +35,7 @@ export class PatientsComponent implements OnInit {
 
   patients: Patient[] = [];
   patientsCount = 0;
+  badgeClass = badgeClass;
 
   constructor(
     private patientService: PatientService,
@@ -65,7 +67,7 @@ export class PatientsComponent implements OnInit {
     const dialogRef = this.dialog.open(AddPatientDialog, {
       width: '700px',
       maxWidth: '95vw',
-      panelClass: "pulseops-patient-dialog",
+      panelClass: "pulseops-form-dialog",
       autoFocus: false
     });
 

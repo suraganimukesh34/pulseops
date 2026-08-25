@@ -4,6 +4,9 @@ export interface HospitalProfile {
   phone: string;
   email: string;
   timezone: string;
+  app_name: string;
+  logo_icon: string;
+  accent_color: string;
 }
 
 export interface UserAccount {
