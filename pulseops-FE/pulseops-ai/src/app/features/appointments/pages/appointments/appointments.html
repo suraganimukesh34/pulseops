@@ -28,6 +28,12 @@
             </button>
         </div>
 
+        @if (isLoading) {
+        <div class="list-loading">
+            <div class="spinner-lg"></div>
+            <span>Loading appointments...</span>
+        </div>
+        } @else {
         <div class="table-scroll">
         <table mat-table [dataSource]="dataSource">
 
@@ -89,6 +95,7 @@
 
         </table>
         </div>
+        }
 
     </div>
 </div>

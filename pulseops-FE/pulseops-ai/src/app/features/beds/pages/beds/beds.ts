@@ -13,6 +13,7 @@ import { AddBedDialog } from '../../components/add-bed-dialog/add-bed-dialog';
 import { AdmitBedDialog } from '../../components/admit-bed-dialog/admit-bed-dialog';
 import { badgeClass } from '../../../../shared/utils/badge.util';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-beds',
@@ -23,10 +24,12 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 })
 export class BedsComponent implements OnInit {
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notifications = inject(NotificationService);
 
   beds: Bed[] = [];
   departments: Department[] = [];
   badgeClass = badgeClass;
+  isLoading = true;
 
   displayedColumns: string[] = [
     'department',
@@ -53,13 +56,21 @@ export class BedsComponent implements OnInit {
   }
 
   loadBeds(): void {
+    this.isLoading = true;
+
     this.bedService.getBeds().subscribe({
       next: (beds) => {
         this.beds = beds;
         this.dataSource.data = beds;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load beds', error),
+      error: (error) => {
+        console.error('Failed to load beds', error);
+        this.isLoading = false;
+        this.notifications.error('Failed to load beds', 'Please try refreshing the page.');
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -99,6 +110,7 @@ export class BedsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((bed) => {
       if (bed) {
+        this.notifications.success('Bed added successfully', `Bed ${bed.bed_number} has been added.`);
         this.loadBeds();
       }
     });
@@ -115,6 +127,7 @@ export class BedsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        this.notifications.success('Patient admitted', `Patient has been admitted to bed ${bed.bed_number}.`);
         this.loadBeds();
       }
     });
@@ -122,8 +135,14 @@ export class BedsComponent implements OnInit {
 
   releaseBed(bed: Bed): void {
     this.bedService.releaseBed(bed.id).subscribe({
-      next: () => this.loadBeds(),
-      error: (error) => console.error('Failed to release bed', error),
+      next: () => {
+        this.notifications.success('Bed released', `Bed ${bed.bed_number} is now available.`);
+        this.loadBeds();
+      },
+      error: (error) => {
+        console.error('Failed to release bed', error);
+        this.notifications.error('Failed to release bed', 'Please try again.');
+      },
     });
   }
 
@@ -138,6 +157,7 @@ export class BedsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((updated) => {
       if (updated) {
+        this.notifications.success('Bed updated successfully', `Bed ${updated.bed_number}'s record has been saved.`);
         this.loadBeds();
       }
     });
@@ -156,8 +176,14 @@ export class BedsComponent implements OnInit {
           return;
         }
         this.bedService.deleteBed(bed.id).subscribe({
-          next: () => this.loadBeds(),
-          error: (error) => console.error('Failed to delete bed', error),
+          next: () => {
+            this.notifications.success('Bed deleted', `Bed ${bed.bed_number}'s record has been removed.`);
+            this.loadBeds();
+          },
+          error: (error) => {
+            console.error('Failed to delete bed', error);
+            this.notifications.error('Failed to delete bed', 'Please try again.');
+          },
         });
       });
   }

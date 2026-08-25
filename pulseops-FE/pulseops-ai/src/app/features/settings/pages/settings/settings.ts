@@ -10,6 +10,7 @@ import { PageHeaderService } from '../../../../core/services/page-header';
 import { CurrentUserService } from '../../../../core/services/current-user.service';
 import { BrandingService } from '../../../../core/services/branding.service';
 import { badgeClass } from '../../../../shared/utils/badge.util';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-settings',
@@ -24,6 +25,7 @@ export class SettingsComponent implements OnInit {
   readonly currentUser = inject(CurrentUserService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly branding = inject(BrandingService);
+  private readonly notifications = inject(NotificationService);
 
   badgeClass = badgeClass;
 
@@ -69,7 +71,10 @@ export class SettingsComponent implements OnInit {
         this.profileForm.setValue(profile);
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load hospital profile', error),
+      error: (error) => {
+        console.error('Failed to load hospital profile', error);
+        this.notifications.error('Failed to load hospital profile', 'Please try refreshing the page.');
+      },
     });
 
     // Fetch unconditionally rather than gating on `isAdmin` here: the guard's
@@ -101,6 +106,7 @@ export class SettingsComponent implements OnInit {
       next: () => {
         this.isSaving = false;
         this.saveSuccess = true;
+        this.notifications.success('Hospital profile updated', 'Your changes are now live across the platform.');
         this.branding.fetch().subscribe();
         this.cdr.detectChanges();
       },
@@ -108,6 +114,7 @@ export class SettingsComponent implements OnInit {
         console.error('Failed to save hospital profile', error);
         this.isSaving = false;
         this.saveError = 'Unable to save changes. Please try again.';
+        this.notifications.error('Failed to save hospital profile', 'Please try again.');
         this.cdr.detectChanges();
       },
     });

@@ -12,6 +12,7 @@ import { PageHeaderService } from '../../../../core/services/page-header';
 import { AddStaffDialog } from '../../components/add-staff-dialog/add-staff-dialog';
 import { badgeClass } from '../../../../shared/utils/badge.util';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-staff',
@@ -22,10 +23,12 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 })
 export class StaffComponent implements OnInit {
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notifications = inject(NotificationService);
 
   staff: Staff[] = [];
   departments: Department[] = [];
   badgeClass = badgeClass;
+  isLoading = true;
 
   displayedColumns: string[] = [
     'name',
@@ -54,13 +57,21 @@ export class StaffComponent implements OnInit {
   }
 
   loadStaff(): void {
+    this.isLoading = true;
+
     this.staffService.getStaff().subscribe({
       next: (staff) => {
         this.staff = staff;
         this.dataSource.data = staff;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load staff', error),
+      error: (error) => {
+        console.error('Failed to load staff', error);
+        this.isLoading = false;
+        this.notifications.error('Failed to load staff', 'Please try refreshing the page.');
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -100,6 +111,7 @@ export class StaffComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((staff) => {
       if (staff) {
+        this.notifications.success('Staff member added successfully', `${staff.name} has been added.`);
         this.loadStaff();
       }
     });
@@ -116,6 +128,7 @@ export class StaffComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((updated) => {
       if (updated) {
+        this.notifications.success('Staff member updated successfully', `${updated.name}'s record has been saved.`);
         this.loadStaff();
       }
     });
@@ -134,8 +147,14 @@ export class StaffComponent implements OnInit {
           return;
         }
         this.staffService.deleteStaff(member.id).subscribe({
-          next: () => this.loadStaff(),
-          error: (error) => console.error('Failed to delete staff member', error),
+          next: () => {
+            this.notifications.success('Staff member deleted', `${member.name}'s record has been removed.`);
+            this.loadStaff();
+          },
+          error: (error) => {
+            console.error('Failed to delete staff member', error);
+            this.notifications.error('Failed to delete staff member', 'Please try again.');
+          },
         });
       });
   }

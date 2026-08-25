@@ -10,6 +10,7 @@ import { PageHeaderService } from '../../../../core/services/page-header';
 import { AddDepartmentDialog } from '../../components/add-department-dialog/add-department-dialog';
 import { badgeClass } from '../../../../shared/utils/badge.util';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-departments',
@@ -20,9 +21,11 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 })
 export class DepartmentsComponent implements OnInit {
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notifications = inject(NotificationService);
 
   departments: Department[] = [];
   badgeClass = badgeClass;
+  isLoading = true;
 
   displayedColumns: string[] = ['name', 'floor', 'head_doctor_name', 'bed_capacity', 'status', 'actions'];
   dataSource = new MatTableDataSource<Department>();
@@ -41,13 +44,21 @@ export class DepartmentsComponent implements OnInit {
   }
 
   loadDepartments(): void {
+    this.isLoading = true;
+
     this.departmentService.getDepartments().subscribe({
       next: (departments) => {
         this.departments = departments;
         this.dataSource.data = departments;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load departments', error),
+      error: (error) => {
+        console.error('Failed to load departments', error);
+        this.isLoading = false;
+        this.notifications.error('Failed to load departments', 'Please try refreshing the page.');
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -69,6 +80,7 @@ export class DepartmentsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((department) => {
       if (department) {
+        this.notifications.success('Department added successfully', `${department.name} has been added.`);
         this.loadDepartments();
       }
     });
@@ -85,6 +97,7 @@ export class DepartmentsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((updated) => {
       if (updated) {
+        this.notifications.success('Department updated successfully', `${updated.name}'s record has been saved.`);
         this.loadDepartments();
       }
     });
@@ -103,8 +116,14 @@ export class DepartmentsComponent implements OnInit {
           return;
         }
         this.departmentService.deleteDepartment(department.id).subscribe({
-          next: () => this.loadDepartments(),
-          error: (error) => console.error('Failed to delete department', error),
+          next: () => {
+            this.notifications.success('Department deleted', `${department.name}'s record has been removed.`);
+            this.loadDepartments();
+          },
+          error: (error) => {
+            console.error('Failed to delete department', error);
+            this.notifications.error('Failed to delete department', 'Please try again.');
+          },
         });
       });
   }

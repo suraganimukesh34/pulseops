@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PatientDetails } from '../../components/patient-details/patient-details';
 import { badgeClass } from '../../../../shared/utils/badge.util';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-patients',
@@ -35,10 +36,12 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 export class PatientsComponent implements OnInit {
 
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notifications = inject(NotificationService);
 
   patients: Patient[] = [];
   patientsCount = 0;
   badgeClass = badgeClass;
+  isLoading = true;
 
   constructor(
     private patientService: PatientService,
@@ -76,21 +79,28 @@ export class PatientsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((patient) => {
       if (patient) {
+        this.notifications.success('Patient added successfully', `${patient.name} has been admitted.`);
         this.loadPatients();
       }
     })
   }
 
   loadPatients(): void {
+    this.isLoading = true;
+
     this.patientService.getPatients().subscribe({
       next: (patients) => {
         this.patients = patients;
         this.patientsCount = patients.length;
         this.dataSource.data = patients;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Failed to load patients', error)
+        console.error('Failed to load patients', error);
+        this.isLoading = false;
+        this.notifications.error('Failed to load patients', 'Please try refreshing the page.');
+        this.cdr.detectChanges();
       }
     });
   }
@@ -119,6 +129,7 @@ export class PatientsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((updated) => {
       if (updated) {
+        this.notifications.success('Patient updated successfully', `${updated.name}'s record has been saved.`);
         this.loadPatients();
       }
     });
@@ -137,8 +148,14 @@ export class PatientsComponent implements OnInit {
           return;
         }
         this.patientService.deletePatient(patient.id).subscribe({
-          next: () => this.loadPatients(),
-          error: (error) => console.error('Failed to delete patient', error)
+          next: () => {
+            this.notifications.success('Patient deleted', `${patient.name}'s record has been removed.`);
+            this.loadPatients();
+          },
+          error: (error) => {
+            console.error('Failed to delete patient', error);
+            this.notifications.error('Failed to delete patient', 'Please try again.');
+          }
         });
       });
   }

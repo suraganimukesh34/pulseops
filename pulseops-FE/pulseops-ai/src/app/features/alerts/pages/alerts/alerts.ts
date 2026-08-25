@@ -10,6 +10,7 @@ import { PageHeaderService } from '../../../../core/services/page-header';
 import { AddAlertDialog } from '../../components/add-alert-dialog/add-alert-dialog';
 import { badgeClass } from '../../../../shared/utils/badge.util';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-alerts',
@@ -20,9 +21,11 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 })
 export class AlertsComponent implements OnInit {
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notifications = inject(NotificationService);
 
   alerts: Alert[] = [];
   badgeClass = badgeClass;
+  isLoading = true;
 
   displayedColumns: string[] = [
     'severity',
@@ -48,13 +51,21 @@ export class AlertsComponent implements OnInit {
   }
 
   loadAlerts(): void {
+    this.isLoading = true;
+
     this.alertService.getAlerts().subscribe({
       next: (alerts) => {
         this.alerts = alerts;
         this.dataSource.data = alerts;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load alerts', error),
+      error: (error) => {
+        console.error('Failed to load alerts', error);
+        this.isLoading = false;
+        this.notifications.error('Failed to load alerts', 'Please try refreshing the page.');
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -76,8 +87,14 @@ export class AlertsComponent implements OnInit {
 
   acknowledge(alert: Alert): void {
     this.alertService.acknowledgeAlert(alert.id).subscribe({
-      next: () => this.loadAlerts(),
-      error: (error) => console.error('Failed to acknowledge alert', error),
+      next: () => {
+        this.notifications.success('Alert acknowledged', `The ${alert.category} alert has been acknowledged.`);
+        this.loadAlerts();
+      },
+      error: (error) => {
+        console.error('Failed to acknowledge alert', error);
+        this.notifications.error('Failed to acknowledge alert', 'Please try again.');
+      },
     });
   }
 
@@ -91,6 +108,7 @@ export class AlertsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((alert) => {
       if (alert) {
+        this.notifications.success('Alert added successfully', `${alert.category} alert has been created.`);
         this.loadAlerts();
       }
     });
@@ -107,6 +125,7 @@ export class AlertsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((updated) => {
       if (updated) {
+        this.notifications.success('Alert updated successfully', `${updated.category} alert has been saved.`);
         this.loadAlerts();
       }
     });
@@ -125,8 +144,14 @@ export class AlertsComponent implements OnInit {
           return;
         }
         this.alertService.deleteAlert(alert.id).subscribe({
-          next: () => this.loadAlerts(),
-          error: (error) => console.error('Failed to delete alert', error),
+          next: () => {
+            this.notifications.success('Alert deleted', `The ${alert.category} alert has been removed.`);
+            this.loadAlerts();
+          },
+          error: (error) => {
+            console.error('Failed to delete alert', error);
+            this.notifications.error('Failed to delete alert', 'Please try again.');
+          },
         });
       });
   }

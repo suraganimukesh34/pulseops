@@ -6,6 +6,7 @@ import { InvoiceService } from '../../../billing/services/invoice.service';
 import { InventoryService } from '../../../inventory/services/inventory.service';
 import { InventoryItem } from '../../../inventory/models/inventory-item.model';
 import { PageHeaderService } from '../../../../core/services/page-header';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 interface BillingBreakdown {
   status: string;
@@ -25,6 +26,7 @@ export class ReportsComponent implements OnInit {
   private readonly invoiceService = inject(InvoiceService);
   private readonly inventoryService = inject(InventoryService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly notifications = inject(NotificationService);
 
   departmentLoad: DepartmentLoadItem[] = [];
   billingBreakdown: BillingBreakdown[] = [];
@@ -40,7 +42,10 @@ export class ReportsComponent implements OnInit {
         this.departmentLoad = summary.department_load;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load department load', error),
+      error: (error) => {
+        console.error('Failed to load department load', error);
+        this.notifications.error('Failed to load department load', 'Please try refreshing the page.');
+      },
     });
 
     this.invoiceService.getInvoices().subscribe({
@@ -56,7 +61,10 @@ export class ReportsComponent implements OnInit {
         });
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load invoices', error),
+      error: (error) => {
+        console.error('Failed to load invoices', error);
+        this.notifications.error('Failed to load billing data', 'Please try refreshing the page.');
+      },
     });
 
     this.inventoryService.getItems().subscribe({
@@ -64,7 +72,10 @@ export class ReportsComponent implements OnInit {
         this.lowStockItems = items.filter((i) => i.quantity < i.reorder_level);
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load inventory', error),
+      error: (error) => {
+        console.error('Failed to load inventory', error);
+        this.notifications.error('Failed to load inventory data', 'Please try refreshing the page.');
+      },
     });
   }
 }

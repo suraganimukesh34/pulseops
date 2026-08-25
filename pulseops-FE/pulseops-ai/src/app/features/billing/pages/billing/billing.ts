@@ -10,6 +10,7 @@ import { PageHeaderService } from '../../../../core/services/page-header';
 import { AddInvoiceDialog } from '../../components/add-invoice-dialog/add-invoice-dialog';
 import { badgeClass } from '../../../../shared/utils/badge.util';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-billing',
@@ -20,9 +21,11 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 })
 export class BillingComponent implements OnInit {
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notifications = inject(NotificationService);
 
   invoices: Invoice[] = [];
   badgeClass = badgeClass;
+  isLoading = true;
 
   displayedColumns: string[] = [
     'patient_name',
@@ -48,13 +51,21 @@ export class BillingComponent implements OnInit {
   }
 
   loadInvoices(): void {
+    this.isLoading = true;
+
     this.invoiceService.getInvoices().subscribe({
       next: (invoices) => {
         this.invoices = invoices;
         this.dataSource.data = invoices;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load invoices', error),
+      error: (error) => {
+        console.error('Failed to load invoices', error);
+        this.isLoading = false;
+        this.notifications.error('Failed to load invoices', 'Please try refreshing the page.');
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -78,8 +89,14 @@ export class BillingComponent implements OnInit {
 
   markPaid(invoice: Invoice): void {
     this.invoiceService.markPaid(invoice.id).subscribe({
-      next: () => this.loadInvoices(),
-      error: (error) => console.error('Failed to mark invoice paid', error),
+      next: () => {
+        this.notifications.success('Invoice marked as paid', `${invoice.patient_name}'s invoice has been settled.`);
+        this.loadInvoices();
+      },
+      error: (error) => {
+        console.error('Failed to mark invoice paid', error);
+        this.notifications.error('Failed to mark invoice paid', 'Please try again.');
+      },
     });
   }
 
@@ -93,6 +110,7 @@ export class BillingComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((invoice) => {
       if (invoice) {
+        this.notifications.success('Invoice added successfully', `Invoice for ${invoice.patient_name} has been created.`);
         this.loadInvoices();
       }
     });
@@ -109,6 +127,7 @@ export class BillingComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((updated) => {
       if (updated) {
+        this.notifications.success('Invoice updated successfully', `${updated.patient_name}'s invoice has been saved.`);
         this.loadInvoices();
       }
     });
@@ -127,8 +146,14 @@ export class BillingComponent implements OnInit {
           return;
         }
         this.invoiceService.deleteInvoice(invoice.id).subscribe({
-          next: () => this.loadInvoices(),
-          error: (error) => console.error('Failed to delete invoice', error),
+          next: () => {
+            this.notifications.success('Invoice deleted', `${invoice.patient_name}'s invoice has been removed.`);
+            this.loadInvoices();
+          },
+          error: (error) => {
+            console.error('Failed to delete invoice', error);
+            this.notifications.error('Failed to delete invoice', 'Please try again.');
+          },
         });
       });
   }

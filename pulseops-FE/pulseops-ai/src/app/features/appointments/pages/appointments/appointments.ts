@@ -12,6 +12,7 @@ import { badgeClass } from '../../../../shared/utils/badge.util';
 import { Department } from '../../../departments/models/department.model';
 import { DepartmentService } from '../../../departments/services/department.service';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-appointments',
@@ -22,10 +23,12 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 })
 export class AppointmentsComponent implements OnInit {
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notifications = inject(NotificationService);
 
   appointments: Appointment[] = [];
   departments: Department[] = [];
   badgeClass = badgeClass;
+  isLoading = true;
 
   displayedColumns: string[] = [
     'date',
@@ -55,13 +58,21 @@ export class AppointmentsComponent implements OnInit {
   }
 
   loadAppointments(): void {
+    this.isLoading = true;
+
     this.appointmentService.getAppointments().subscribe({
       next: (appointments) => {
         this.appointments = appointments;
         this.dataSource.data = appointments;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load appointments', error),
+      error: (error) => {
+        console.error('Failed to load appointments', error);
+        this.isLoading = false;
+        this.notifications.error('Failed to load appointments', 'Please try refreshing the page.');
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -97,6 +108,7 @@ export class AppointmentsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((appointment) => {
       if (appointment) {
+        this.notifications.success('Appointment added successfully', `${appointment.patient_name}'s appointment has been scheduled.`);
         this.loadAppointments();
       }
     });
@@ -113,6 +125,7 @@ export class AppointmentsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((updated) => {
       if (updated) {
+        this.notifications.success('Appointment updated successfully', `${updated.patient_name}'s appointment has been saved.`);
         this.loadAppointments();
       }
     });
@@ -131,8 +144,14 @@ export class AppointmentsComponent implements OnInit {
           return;
         }
         this.appointmentService.deleteAppointment(appointment.id).subscribe({
-          next: () => this.loadAppointments(),
-          error: (error) => console.error('Failed to delete appointment', error),
+          next: () => {
+            this.notifications.success('Appointment deleted', `${appointment.patient_name}'s appointment has been removed.`);
+            this.loadAppointments();
+          },
+          error: (error) => {
+            console.error('Failed to delete appointment', error);
+            this.notifications.error('Failed to delete appointment', 'Please try again.');
+          },
         });
       });
   }

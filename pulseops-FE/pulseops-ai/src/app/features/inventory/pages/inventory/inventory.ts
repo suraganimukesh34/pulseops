@@ -10,6 +10,7 @@ import { PageHeaderService } from '../../../../core/services/page-header';
 import { AddItemDialog } from '../../components/add-item-dialog/add-item-dialog';
 import { RestockDialog } from '../../components/restock-dialog/restock-dialog';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-inventory',
@@ -20,8 +21,10 @@ import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.s
 })
 export class InventoryComponent implements OnInit {
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notifications = inject(NotificationService);
 
   items: InventoryItem[] = [];
+  isLoading = true;
 
   displayedColumns: string[] = [
     'name',
@@ -49,13 +52,21 @@ export class InventoryComponent implements OnInit {
   }
 
   loadItems(): void {
+    this.isLoading = true;
+
     this.inventoryService.getItems().subscribe({
       next: (items) => {
         this.items = items;
         this.dataSource.data = items;
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Failed to load inventory items', error),
+      error: (error) => {
+        console.error('Failed to load inventory items', error);
+        this.isLoading = false;
+        this.notifications.error('Failed to load inventory items', 'Please try refreshing the page.');
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -77,6 +88,7 @@ export class InventoryComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((item) => {
       if (item) {
+        this.notifications.success('Inventory item added successfully', `${item.name} has been added to inventory.`);
         this.loadItems();
       }
     });
@@ -93,6 +105,7 @@ export class InventoryComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        this.notifications.success('Item restocked', `${item.name} has been restocked.`);
         this.loadItems();
       }
     });
@@ -109,6 +122,7 @@ export class InventoryComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((updated) => {
       if (updated) {
+        this.notifications.success('Inventory item updated successfully', `${updated.name}'s record has been saved.`);
         this.loadItems();
       }
     });
@@ -127,8 +141,14 @@ export class InventoryComponent implements OnInit {
           return;
         }
         this.inventoryService.deleteItem(item.id).subscribe({
-          next: () => this.loadItems(),
-          error: (error) => console.error('Failed to delete inventory item', error),
+          next: () => {
+            this.notifications.success('Inventory item deleted', `${item.name} has been removed from inventory.`);
+            this.loadItems();
+          },
+          error: (error) => {
+            console.error('Failed to delete inventory item', error);
+            this.notifications.error('Failed to delete inventory item', 'Please try again.');
+          },
         });
       });
   }
