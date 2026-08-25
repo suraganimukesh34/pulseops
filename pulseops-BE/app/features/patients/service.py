@@ -21,6 +21,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. Sarah Smith",
         diagnosis="Chest pain",
         symptoms="Chest discomfort and shortness of breath",
+        contact_number="555-2001",
+        blood_group="O+",
     ),
     PatientResponse(
         id="P1002",
@@ -37,6 +39,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. Michael Brown",
         diagnosis="Migraine",
         symptoms="Severe headache and sensitivity to light",
+        contact_number="555-2002",
+        blood_group="A+",
     ),
     PatientResponse(
         id="P1003",
@@ -53,6 +57,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. David Wilson",
         diagnosis="Pneumonia",
         symptoms="Difficulty breathing and persistent cough",
+        contact_number="555-2003",
+        blood_group="B+",
     ),
     PatientResponse(
         id="P1004",
@@ -69,6 +75,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. James Anderson",
         diagnosis="Fractured wrist",
         symptoms="Wrist pain and swelling",
+        contact_number="555-2004",
+        blood_group="AB+",
     ),
     PatientResponse(
         id="P1005",
@@ -85,6 +93,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. Emily Davis",
         diagnosis="Viral infection",
         symptoms="Fever, fatigue and body aches",
+        contact_number="555-2005",
+        blood_group="O-",
     ),
     PatientResponse(
         id="P1006",
@@ -101,6 +111,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. Daniel Thomas",
         diagnosis="Acute abdominal pain",
         symptoms="Severe abdominal pain and nausea",
+        contact_number="555-2006",
+        blood_group="A-",
     ),
     PatientResponse(
         id="P1007",
@@ -117,6 +129,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. Sarah Smith",
         diagnosis="Hypertension",
         symptoms="Dizziness and elevated blood pressure",
+        contact_number="555-2007",
+        blood_group="B-",
     ),
     PatientResponse(
         id="P1008",
@@ -133,6 +147,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. Christopher Lee",
         diagnosis="Lymphoma",
         symptoms="Fatigue and reduced appetite",
+        contact_number="555-2008",
+        blood_group="AB-",
     ),
     PatientResponse(
         id="P1009",
@@ -149,6 +165,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. Lisa Martin",
         diagnosis="Dehydration",
         symptoms="Weakness and dizziness",
+        contact_number="555-2009",
+        blood_group="O+",
     ),
     PatientResponse(
         id="P1010",
@@ -165,6 +183,8 @@ patients: list[PatientResponse] = [
         attending_doctor="Dr. Robert Clark",
         diagnosis="Severe asthma",
         symptoms="Breathing difficulty and wheezing",
+        contact_number="555-2010",
+        blood_group="A+",
     ),
 ]
 
@@ -201,6 +221,8 @@ def create_patient(patient: PatientCreate) -> PatientResponse:
         attending_doctor=patient.attending_doctor,
         diagnosis=patient.diagnosis,
         symptoms=patient.symptoms,
+        contact_number=patient.contact_number or "",
+        blood_group=patient.blood_group or "",
     )
 
     patients.append(new_patient)
@@ -236,6 +258,8 @@ def update_patient_service(
     existing_patient.attending_doctor = patient.attending_doctor
     existing_patient.diagnosis = patient.diagnosis
     existing_patient.symptoms = patient.symptoms
+    existing_patient.contact_number = patient.contact_number or ""
+    existing_patient.blood_group = patient.blood_group or ""
 
     return existing_patient
 

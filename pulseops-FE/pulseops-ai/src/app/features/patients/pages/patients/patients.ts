@@ -57,7 +57,6 @@ export class PatientsComponent implements OnInit {
     'location',
     'status',
     'priority',
-    'ai',
     'actions'
   ];
 
@@ -97,7 +96,7 @@ export class PatientsComponent implements OnInit {
   }
 
 
-  openPatientAI(patientId: string): void {
+  viewPatientDetails(patientId: string): void {
     this.dialog.open(PatientDetails, {
       width: '900px',
       maxWidth: '95vw',

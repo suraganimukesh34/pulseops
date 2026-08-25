@@ -136,6 +136,51 @@
                     }
                 </div>
 
+
+                <!-- Contact Number -->
+                <div class="field">
+                    <label for="contactNumber">
+                        Contact Number
+                    </label>
+
+                    <input id="contactNumber" type="tel" formControlName="contact_number"
+                        placeholder="e.g. 555-2001" autocomplete="off"
+                        [class.invalid]="contactNumber.invalid && contactNumber.touched" />
+
+                    @if (contactNumber.invalid && contactNumber.touched) {
+                    <div class="error-message">
+                        Enter a valid contact number.
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Blood Group -->
+                <div class="field">
+                    <label for="bloodGroup">
+                        Blood Group
+                    </label>
+
+                    <div class="select-wrapper">
+                        <select id="bloodGroup" formControlName="blood_group">
+                            <option value="">
+                                Unknown
+                            </option>
+
+                            @for (option of bloodGroupOptions; track option) {
+                            <option [value]="option">
+                                {{ option }}
+                            </option>
+                            }
+                        </select>
+
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -169,7 +214,7 @@
                         <select id="department" formControlName="department"
                             [class.invalid]="department.invalid && department.touched">
                             <option value="" disabled>
-                                Select department
+                                {{ isLoadingOptions ? 'Loading departments...' : 'Select department' }}
                             </option>
 
                             @for (option of departmentOptions; track option) {
@@ -237,12 +282,12 @@
                     <div class="select-wrapper">
                         <select id="bed" formControlName="bed" [class.invalid]="bed.invalid && bed.touched">
                             <option value="" disabled>
-                                Select bed
+                                {{ department.value ? 'Select bed' : 'Select department first' }}
                             </option>
 
-                            @for (option of bedOptions; track option) {
-                            <option [value]="option">
-                                {{ option }}
+                            @for (option of filteredBedOptions; track option.id) {
+                            <option [value]="option.bed_number">
+                                {{ option.bed_number }}{{ option.status !== 'Available' ? ' (current)' : '' }}
                             </option>
                             }
                         </select>
@@ -256,6 +301,12 @@
                     @if (bed.invalid && bed.touched) {
                     <div class="error-message">
                         Bed is required.
+                    </div>
+                    }
+
+                    @if (department.value && filteredBedOptions.length === 0 && !isLoadingOptions) {
+                    <div class="hint-message">
+                        No available beds in this department right now.
                     </div>
                     }
                 </div>
@@ -377,19 +428,28 @@
                         Attending Doctor
                     </label>
 
-                    <input id="attendingDoctor" type="text" formControlName="attending_doctor"
-                        placeholder="Enter attending doctor's name" autocomplete="off" [class.invalid]="
-attendingDoctor.invalid &&
-attendingDoctor.touched
-" />
+                    <div class="select-wrapper">
+                        <select id="attendingDoctor" formControlName="attending_doctor">
+                            <option value="">
+                                {{ department.value ? 'Unassigned' : 'Select department first' }}
+                            </option>
 
-                    @if (
-                    attendingDoctor.invalid &&
-                    attendingDoctor.touched &&
-                    attendingDoctor.hasError('maxlength')
-                    ) {
-                    <div class="error-message">
-                        Attending doctor's name cannot exceed 100 characters.
+                            @for (option of filteredDoctorOptions; track option.id) {
+                            <option [value]="option.name">
+                                {{ option.name }}{{ option.specialization ? ' — ' + option.specialization : '' }}
+                            </option>
+                            }
+                        </select>
+
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    @if (department.value && filteredDoctorOptions.length === 0 && !isLoadingOptions) {
+                    <div class="hint-message">
+                        No doctors on record for this department yet.
                     </div>
                     }
                 </div>

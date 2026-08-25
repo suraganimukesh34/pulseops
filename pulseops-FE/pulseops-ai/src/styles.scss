@@ -570,6 +570,13 @@ mat-card {
   font-weight: 700;
 }
 
+.form-dialog .hint-message {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
 .form-dialog .submit-error {
   display: flex;
   align-items: center;

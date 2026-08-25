@@ -23,6 +23,8 @@ class PatientCreate(BaseModel):
     attending_doctor: str | None = None
     diagnosis: str | None = None
     symptoms: str | None = None
+    contact_number: str | None = None
+    blood_group: str | None = None
 
 
 class PatientUpdate(BaseModel):
@@ -42,6 +44,8 @@ class PatientUpdate(BaseModel):
     attending_doctor: str | None = None
     diagnosis: str | None = None
     symptoms: str | None = None
+    contact_number: str | None = None
+    blood_group: str | None = None
 
 
 class PatientResponse(BaseModel):
@@ -59,3 +63,5 @@ class PatientResponse(BaseModel):
     attending_doctor: str
     diagnosis: str
     symptoms: str
+    contact_number: str
+    blood_group: str

@@ -1,4 +1,4 @@
-import { Component, Inject, inject, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject, Optional } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -9,8 +9,15 @@ import {
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
+import { forkJoin } from 'rxjs';
 import { Patient, PatientCreate } from '../../models/patient.model';
 import { PatientService } from '../../services/patient';
+import { Department } from '../../../departments/models/department.model';
+import { DepartmentService } from '../../../departments/services/department.service';
+import { Bed } from '../../../beds/models/bed.model';
+import { BedService } from '../../../beds/services/bed.service';
+import { Staff } from '../../../staff/models/staff.model';
+import { StaffService } from '../../../staff/services/staff.service';
 
 export interface AddPatientDialogData {
   patient: Patient;
@@ -30,6 +37,10 @@ export class AddPatientDialog {
 
   private readonly fb = inject(FormBuilder);
   private readonly patientService = inject(PatientService);
+  private readonly departmentService = inject(DepartmentService);
+  private readonly bedService = inject(BedService);
+  private readonly staffService = inject(StaffService);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly dialogRef =
     inject(MatDialogRef<AddPatientDialog>);
 
@@ -39,6 +50,12 @@ export class AddPatientDialog {
   isSubmitting = false;
   submitError = '';
 
+  isLoadingOptions = true;
+
+  private departments: Department[] = [];
+  private allBeds: Bed[] = [];
+  private allDoctors: Staff[] = [];
+
   // Dropdown options
   readonly genderOptions = [
     'Male',
@@ -46,33 +63,25 @@ export class AddPatientDialog {
     'Other'
   ];
 
-  readonly departmentOptions = [
-    'Emergency',
-    'Cardiology',
-    'Neurology',
-    'Orthopedics',
-    'Pediatrics',
-    'General Medicine',
-    'ICU'
-  ];
+  departmentOptions: string[] = [];
 
   readonly wardOptions = [
     'Ward A',
     'Ward B',
     'Ward C',
-    'ICU',
+    'Ward D',
     'Emergency'
   ];
 
-  readonly bedOptions = [
-    'Bed 01',
-    'Bed 02',
-    'Bed 03',
-    'Bed 04',
-    'Bed 05',
-    'Bed 06',
-    'Bed 07',
-    'Bed 08'
+  filteredBedOptions: Bed[] = [];
+
+  filteredDoctorOptions: Staff[] = [];
+
+  readonly bloodGroupOptions = [
+    'A+', 'A-',
+    'B+', 'B-',
+    'AB+', 'AB-',
+    'O+', 'O-'
   ];
 
   readonly statusOptions = [
@@ -112,6 +121,17 @@ export class AddPatientDialog {
       Validators.required
     ],
 
+    contact_number: [
+      '',
+      [
+        Validators.pattern(/^[0-9+\-\s()]{7,20}$/)
+      ]
+    ],
+
+    blood_group: [
+      ''
+    ],
+
     department: [
       '',
       Validators.required
@@ -146,8 +166,7 @@ export class AddPatientDialog {
     ],
 
     attending_doctor: [
-      '',
-      Validators.maxLength(100)
+      ''
     ],
 
     diagnosis: [
@@ -170,6 +189,8 @@ export class AddPatientDialog {
         name: data.patient.name,
         age: data.patient.age,
         gender: data.patient.gender,
+        contact_number: data.patient.contact_number ?? '',
+        blood_group: data.patient.blood_group ?? '',
         department: data.patient.department,
         ward: data.patient.ward,
         bed: data.patient.bed,
@@ -181,6 +202,77 @@ export class AddPatientDialog {
         diagnosis: data.patient.diagnosis ?? '',
         symptoms: data.patient.symptoms ?? '',
       });
+    }
+
+    forkJoin({
+      departments: this.departmentService.getDepartments(),
+      beds: this.bedService.getBeds(),
+      staff: this.staffService.getStaff(),
+    }).subscribe({
+      next: ({ departments, beds, staff }) => {
+        this.departments = departments;
+        this.departmentOptions = departments.map((department) => department.name);
+        this.allBeds = beds;
+        this.allDoctors = staff.filter((member) => member.role === 'Doctor');
+
+        this.refreshBedOptions();
+        this.refreshDoctorOptions();
+
+        this.isLoadingOptions = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Failed to load department/bed/staff options', error);
+        this.isLoadingOptions = false;
+        this.cdr.detectChanges();
+      }
+    });
+
+    // Bed and attending-doctor choices are scoped to the selected department.
+    this.patientForm.controls.department.valueChanges.subscribe(() => {
+      this.refreshBedOptions();
+      this.refreshDoctorOptions();
+      this.cdr.detectChanges();
+    });
+  }
+
+  private refreshBedOptions(): void {
+    const selectedDepartment = this.departments.find(
+      (department) => department.name === this.patientForm.controls.department.value
+    );
+
+    const currentBed = this.patientForm.controls.bed.value;
+
+    this.filteredBedOptions = selectedDepartment
+      ? this.allBeds.filter(
+        (bed) =>
+          bed.department_id === selectedDepartment.id &&
+          (bed.status === 'Available' || bed.bed_number === currentBed)
+      )
+      : [];
+
+    const stillValid = this.filteredBedOptions.some((bed) => bed.bed_number === currentBed);
+
+    if (!stillValid && currentBed) {
+      this.patientForm.controls.bed.setValue('');
+    }
+  }
+
+  private refreshDoctorOptions(): void {
+    const selectedDepartment = this.departments.find(
+      (department) => department.name === this.patientForm.controls.department.value
+    );
+
+    const currentDoctor = this.patientForm.controls.attending_doctor.value;
+
+    this.filteredDoctorOptions = selectedDepartment
+      ? this.allDoctors.filter((doctor) => doctor.department_id === selectedDepartment.id)
+      : [];
+
+    const stillValid = this.filteredDoctorOptions.some((doctor) => doctor.name === currentDoctor);
+
+    if (!stillValid && currentDoctor) {
+      this.patientForm.controls.attending_doctor.setValue('');
     }
   }
 
@@ -194,6 +286,14 @@ export class AddPatientDialog {
 
   get gender() {
     return this.patientForm.controls.gender;
+  }
+
+  get contactNumber() {
+    return this.patientForm.controls.contact_number;
+  }
+
+  get bloodGroup() {
+    return this.patientForm.controls.blood_group;
   }
 
   get department() {
@@ -253,6 +353,8 @@ export class AddPatientDialog {
       name: formValue.name.trim(),
       age: formValue.age,
       gender: formValue.gender,
+      contact_number: formValue.contact_number.trim(),
+      blood_group: formValue.blood_group,
       department: formValue.department,
       ward: formValue.ward,
       bed: formValue.bed,
@@ -266,7 +368,7 @@ export class AddPatientDialog {
         formValue.expected_discharge_date || '',
 
       attending_doctor:
-        formValue.attending_doctor.trim(),
+        formValue.attending_doctor,
 
       diagnosis:
         formValue.diagnosis.trim(),

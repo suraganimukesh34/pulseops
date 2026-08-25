@@ -16,7 +16,10 @@ export interface Patient {
 
     attending_doctor: string;
     diagnosis: string;
-    symptoms: string
+    symptoms: string;
+
+    contact_number: string;
+    blood_group: string;
 
 }
 
@@ -37,7 +40,10 @@ export interface PatientCreate {
 
     attending_doctor: string;
     diagnosis: string;
-    symptoms: string
+    symptoms: string;
+
+    contact_number: string;
+    blood_group: string;
 
 }
 
