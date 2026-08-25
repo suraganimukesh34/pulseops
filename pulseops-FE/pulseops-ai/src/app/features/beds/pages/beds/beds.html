@@ -60,6 +60,14 @@
                     } @else if (bed.status === 'Available') {
                     <button type="button" class="submit-button" (click)="openAdmitDialog(bed)">Admit</button>
                     }
+                    <button type="button" class="icon-action-btn" aria-label="Edit bed"
+                        (click)="openEditBedDialog(bed)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button type="button" class="icon-action-btn danger" aria-label="Delete bed"
+                        (click)="deleteBed(bed)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
                 </td>
             </ng-container>
 

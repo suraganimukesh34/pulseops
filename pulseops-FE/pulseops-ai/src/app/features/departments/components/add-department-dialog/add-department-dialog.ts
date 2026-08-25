@@ -1,8 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, Inject, Optional, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { DepartmentCreate } from '../../models/department.model';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Department, DepartmentCreate } from '../../models/department.model';
 import { DepartmentService } from '../../services/department.service';
+
+export interface AddDepartmentDialogData {
+  department: Department;
+}
 
 @Component({
   selector: 'app-add-department-dialog',
@@ -16,6 +20,9 @@ export class AddDepartmentDialog {
   private readonly departmentService = inject(DepartmentService);
   private readonly dialogRef = inject(MatDialogRef<AddDepartmentDialog>);
 
+  readonly isEditMode: boolean;
+  private readonly editingId: string | null;
+
   isSubmitting = false;
   submitError = '';
 
@@ -28,6 +35,21 @@ export class AddDepartmentDialog {
     status: ['Active', Validators.required],
     head_doctor_name: ['', Validators.maxLength(100)],
   });
+
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) data: AddDepartmentDialogData | null) {
+    this.isEditMode = !!data?.department;
+    this.editingId = data?.department.id ?? null;
+
+    if (data?.department) {
+      this.departmentForm.setValue({
+        name: data.department.name,
+        floor: data.department.floor,
+        bed_capacity: data.department.bed_capacity,
+        status: data.department.status,
+        head_doctor_name: data.department.head_doctor_name ?? '',
+      });
+    }
+  }
 
   get name() {
     return this.departmentForm.controls.name;
@@ -63,15 +85,19 @@ export class AddDepartmentDialog {
       head_doctor_id: null,
     };
 
-    this.departmentService.createDepartment(department).subscribe({
-      next: (created) => {
+    const request$ = this.isEditMode
+      ? this.departmentService.updateDepartment(this.editingId!, department)
+      : this.departmentService.createDepartment(department);
+
+    request$.subscribe({
+      next: (saved) => {
         this.isSubmitting = false;
-        this.dialogRef.close(created);
+        this.dialogRef.close(saved);
       },
       error: (error) => {
-        console.error('Failed to create department', error);
+        console.error('Failed to save department', error);
         this.isSubmitting = false;
-        this.submitError = 'Unable to add department. Please try again.';
+        this.submitError = `Unable to ${this.isEditMode ? 'update' : 'add'} department. Please try again.`;
       },
     });
   }

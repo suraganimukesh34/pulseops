@@ -1,10 +1,14 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject, OnInit, Optional } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { InvoiceCreate } from '../../models/invoice.model';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Invoice, InvoiceCreate } from '../../models/invoice.model';
 import { InvoiceService } from '../../services/invoice.service';
 import { Patient } from '../../../patients/models/patient.model';
 import { PatientService } from '../../../patients/services/patient';
+
+export interface AddInvoiceDialogData {
+  invoice: Invoice;
+}
 
 @Component({
   selector: 'app-add-invoice-dialog',
@@ -19,6 +23,9 @@ export class AddInvoiceDialog implements OnInit {
   private readonly patientService = inject(PatientService);
   private readonly dialogRef = inject(MatDialogRef<AddInvoiceDialog>);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  readonly isEditMode: boolean;
+  private readonly editingId: string | null;
 
   isSubmitting = false;
   submitError = '';
@@ -55,6 +62,23 @@ export class AddInvoiceDialog implements OnInit {
     return this.invoiceForm.controls.due_date;
   }
 
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) data: AddInvoiceDialogData | null) {
+    this.isEditMode = !!data?.invoice;
+    this.editingId = data?.invoice.id ?? null;
+
+    if (data?.invoice) {
+      const firstItem = data.invoice.items[0] ?? { description: '', amount: 0 };
+      this.invoiceForm.setValue({
+        patient_id: data.invoice.patient_id,
+        description: firstItem.description,
+        amount: firstItem.amount,
+        status: data.invoice.status,
+        issued_date: data.invoice.issued_date,
+        due_date: data.invoice.due_date,
+      });
+    }
+  }
+
   ngOnInit(): void {
     this.patientService.getPatients().subscribe({
       next: (patients) => {
@@ -88,15 +112,19 @@ export class AddInvoiceDialog implements OnInit {
       due_date: formValue.due_date,
     };
 
-    this.invoiceService.createInvoice(invoice).subscribe({
-      next: (created) => {
+    const request$ = this.isEditMode
+      ? this.invoiceService.updateInvoice(this.editingId!, invoice)
+      : this.invoiceService.createInvoice(invoice);
+
+    request$.subscribe({
+      next: (saved) => {
         this.isSubmitting = false;
-        this.dialogRef.close(created);
+        this.dialogRef.close(saved);
       },
       error: (error) => {
-        console.error('Failed to create invoice', error);
+        console.error('Failed to save invoice', error);
         this.isSubmitting = false;
-        this.submitError = 'Unable to add invoice. Please try again.';
+        this.submitError = `Unable to ${this.isEditMode ? 'update' : 'add'} invoice. Please try again.`;
       },
     });
   }

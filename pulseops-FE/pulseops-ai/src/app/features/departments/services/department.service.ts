@@ -18,4 +18,12 @@ export class DepartmentService {
   createDepartment(department: DepartmentCreate): Observable<Department> {
     return this.http.post<Department>(this.apiUrl, department);
   }
+
+  updateDepartment(id: string, department: DepartmentCreate): Observable<Department> {
+    return this.http.put<Department>(`${this.apiUrl}/${id}`, department);
+  }
+
+  deleteDepartment(id: string): Observable<Department> {
+    return this.http.delete<Department>(`${this.apiUrl}/${id}`);
+  }
 }

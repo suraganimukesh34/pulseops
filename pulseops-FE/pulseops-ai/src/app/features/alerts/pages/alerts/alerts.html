@@ -67,6 +67,14 @@
                     } @else {
                     <span>Acknowledged</span>
                     }
+                    <button type="button" class="icon-action-btn" aria-label="Edit alert"
+                        (click)="openEditAlertDialog(alert)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button type="button" class="icon-action-btn danger" aria-label="Delete alert"
+                        (click)="deleteAlert(alert)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
                 </td>
             </ng-container>
 

@@ -18,4 +18,12 @@ export class AppointmentService {
   createAppointment(appointment: AppointmentCreate): Observable<Appointment> {
     return this.http.post<Appointment>(this.apiUrl, appointment);
   }
+
+  updateAppointment(id: string, appointment: AppointmentCreate): Observable<Appointment> {
+    return this.http.put<Appointment>(`${this.apiUrl}/${id}`, appointment);
+  }
+
+  deleteAppointment(id: string): Observable<Appointment> {
+    return this.http.delete<Appointment>(`${this.apiUrl}/${id}`);
+  }
 }

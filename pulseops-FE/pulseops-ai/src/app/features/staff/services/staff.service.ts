@@ -18,4 +18,12 @@ export class StaffService {
   createStaff(member: StaffCreate): Observable<Staff> {
     return this.http.post<Staff>(this.apiUrl, member);
   }
+
+  updateStaff(id: string, member: StaffCreate): Observable<Staff> {
+    return this.http.put<Staff>(`${this.apiUrl}/${id}`, member);
+  }
+
+  deleteStaff(id: string): Observable<Staff> {
+    return this.http.delete<Staff>(`${this.apiUrl}/${id}`);
+  }
 }

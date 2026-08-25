@@ -1,15 +1,20 @@
-import { Component, inject } from '@angular/core';
+import { Component, Inject, inject, Optional } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
 import {
+  MAT_DIALOG_DATA,
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
-import { PatientCreate } from '../../models/patient.model';
+import { Patient, PatientCreate } from '../../models/patient.model';
 import { PatientService } from '../../services/patient';
+
+export interface AddPatientDialogData {
+  patient: Patient;
+}
 
 @Component({
   selector: 'app-add-patient-dialog',
@@ -27,6 +32,9 @@ export class AddPatientDialog {
   private readonly patientService = inject(PatientService);
   private readonly dialogRef =
     inject(MatDialogRef<AddPatientDialog>);
+
+  readonly isEditMode: boolean;
+  private readonly editingId: string | null;
 
   isSubmitting = false;
   submitError = '';
@@ -153,6 +161,29 @@ export class AddPatientDialog {
     ]
   });
 
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) data: AddPatientDialogData | null) {
+    this.isEditMode = !!data?.patient;
+    this.editingId = data?.patient.id ?? null;
+
+    if (data?.patient) {
+      this.patientForm.setValue({
+        name: data.patient.name,
+        age: data.patient.age,
+        gender: data.patient.gender,
+        department: data.patient.department,
+        ward: data.patient.ward,
+        bed: data.patient.bed,
+        status: data.patient.status,
+        priority: data.patient.priority,
+        admission_date: data.patient.admission_date ?? '',
+        expected_discharge_date: data.patient.expected_discharge_date ?? '',
+        attending_doctor: data.patient.attending_doctor ?? '',
+        diagnosis: data.patient.diagnosis ?? '',
+        symptoms: data.patient.symptoms ?? '',
+      });
+    }
+  }
+
   get name() {
     return this.patientForm.controls.name;
   }
@@ -244,24 +275,28 @@ export class AddPatientDialog {
         formValue.symptoms.trim()
     };
 
-    this.patientService.createPatient(patient).subscribe({
-      next: (createdPatient) => {
+    const request$ = this.isEditMode
+      ? this.patientService.updatePatient(this.editingId!, patient)
+      : this.patientService.createPatient(patient);
+
+    request$.subscribe({
+      next: (savedPatient) => {
         this.isSubmitting = false;
 
-        // Return the created patient to patients.ts
-        this.dialogRef.close(createdPatient);
+        // Return the saved patient to patients.ts
+        this.dialogRef.close(savedPatient);
       },
 
       error: (error) => {
         console.error(
-          'Failed to create patient',
+          `Failed to ${this.isEditMode ? 'update' : 'create'} patient`,
           error
         );
 
         this.isSubmitting = false;
 
         this.submitError =
-          'Unable to add patient. Please try again.';
+          `Unable to ${this.isEditMode ? 'update' : 'add'} patient. Please try again.`;
       }
     });
   }

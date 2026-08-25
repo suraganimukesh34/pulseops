@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { StaffService } from '../../services/staff.service';
 import { Staff } from '../../models/staff.model';
 import { DepartmentService } from '../../../departments/services/department.service';
@@ -10,15 +11,18 @@ import { StatCard } from '../../../../shared/components/stat-card/stat-card';
 import { PageHeaderService } from '../../../../core/services/page-header';
 import { AddStaffDialog } from '../../components/add-staff-dialog/add-staff-dialog';
 import { badgeClass } from '../../../../shared/utils/badge.util';
+import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-staff',
   standalone: true,
-  imports: [CommonModule, StatCard, MatTableModule],
+  imports: [CommonModule, StatCard, MatTableModule, MatIconModule],
   templateUrl: './staff.html',
   styleUrl: './staff.scss',
 })
 export class StaffComponent implements OnInit {
+  private readonly confirmDialog = inject(ConfirmDialogService);
+
   staff: Staff[] = [];
   departments: Department[] = [];
   badgeClass = badgeClass;
@@ -30,6 +34,7 @@ export class StaffComponent implements OnInit {
     'specialization',
     'shift',
     'status',
+    'actions',
   ];
   dataSource = new MatTableDataSource<Staff>();
 
@@ -98,5 +103,40 @@ export class StaffComponent implements OnInit {
         this.loadStaff();
       }
     });
+  }
+
+  openEditStaffDialog(member: Staff): void {
+    const dialogRef = this.dialog.open(AddStaffDialog, {
+      width: '600px',
+      maxWidth: '95vw',
+      panelClass: 'pulseops-form-dialog',
+      autoFocus: false,
+      data: { staff: member },
+    });
+
+    dialogRef.afterClosed().subscribe((updated) => {
+      if (updated) {
+        this.loadStaff();
+      }
+    });
+  }
+
+  deleteStaff(member: Staff): void {
+    this.confirmDialog
+      .confirm({
+        title: 'Remove Staff Member',
+        message: `Are you sure you want to remove "${member.name}" from staff? This cannot be undone.`,
+        confirmLabel: 'Delete',
+        danger: true,
+      })
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
+        }
+        this.staffService.deleteStaff(member.id).subscribe({
+          next: () => this.loadStaff(),
+          error: (error) => console.error('Failed to delete staff member', error),
+        });
+      });
   }
 }

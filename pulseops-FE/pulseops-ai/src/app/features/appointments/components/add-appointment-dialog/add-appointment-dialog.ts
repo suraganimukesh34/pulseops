@@ -1,12 +1,16 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, Optional, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { AppointmentCreate } from '../../models/appointment.model';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Appointment, AppointmentCreate } from '../../models/appointment.model';
 import { AppointmentService } from '../../services/appointment.service';
 import { Patient } from '../../../patients/models/patient.model';
 import { PatientService } from '../../../patients/services/patient';
 import { Department } from '../../../departments/models/department.model';
 import { DepartmentService } from '../../../departments/services/department.service';
+
+export interface AddAppointmentDialogData {
+  appointment: Appointment;
+}
 
 @Component({
   selector: 'app-add-appointment-dialog',
@@ -22,6 +26,9 @@ export class AddAppointmentDialog implements OnInit {
   private readonly departmentService = inject(DepartmentService);
   private readonly dialogRef = inject(MatDialogRef<AddAppointmentDialog>);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  readonly isEditMode: boolean;
+  private readonly editingId: string | null;
 
   isSubmitting = false;
   submitError = '';
@@ -77,6 +84,24 @@ export class AddAppointmentDialog implements OnInit {
     return this.appointmentForm.controls.reason;
   }
 
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) data: AddAppointmentDialogData | null) {
+    this.isEditMode = !!data?.appointment;
+    this.editingId = data?.appointment.id ?? null;
+
+    if (data?.appointment) {
+      this.appointmentForm.setValue({
+        patient_id: data.appointment.patient_id,
+        doctor_id: data.appointment.doctor_id,
+        department_id: data.appointment.department_id,
+        date: data.appointment.date,
+        time: data.appointment.time,
+        status: data.appointment.status,
+        reason: data.appointment.reason,
+        notes: data.appointment.notes ?? '',
+      });
+    }
+  }
+
   ngOnInit(): void {
     this.patientService.getPatients().subscribe({
       next: (patients) => {
@@ -123,15 +148,19 @@ export class AddAppointmentDialog implements OnInit {
       notes: formValue.notes.trim() || null,
     };
 
-    this.appointmentService.createAppointment(appointment).subscribe({
-      next: (created) => {
+    const request$ = this.isEditMode
+      ? this.appointmentService.updateAppointment(this.editingId!, appointment)
+      : this.appointmentService.createAppointment(appointment);
+
+    request$.subscribe({
+      next: (saved) => {
         this.isSubmitting = false;
-        this.dialogRef.close(created);
+        this.dialogRef.close(saved);
       },
       error: (error) => {
-        console.error('Failed to create appointment', error);
+        console.error('Failed to save appointment', error);
         this.isSubmitting = false;
-        this.submitError = 'Unable to add appointment. Please try again.';
+        this.submitError = `Unable to ${this.isEditMode ? 'update' : 'add'} appointment. Please try again.`;
       },
     });
   }

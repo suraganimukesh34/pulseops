@@ -73,6 +73,14 @@
                     <button type="button" class="submit-button" (click)="openRestockDialog(item)">
                         Restock
                     </button>
+                    <button type="button" class="icon-action-btn" aria-label="Edit item"
+                        (click)="openEditItemDialog(item)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button type="button" class="icon-action-btn danger" aria-label="Delete item"
+                        (click)="deleteItem(item)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
                 </td>
             </ng-container>
 

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { BedService } from '../../services/bed.service';
 import { Bed } from '../../models/bed.model';
 import { DepartmentService } from '../../../departments/services/department.service';
@@ -11,15 +12,18 @@ import { PageHeaderService } from '../../../../core/services/page-header';
 import { AddBedDialog } from '../../components/add-bed-dialog/add-bed-dialog';
 import { AdmitBedDialog } from '../../components/admit-bed-dialog/admit-bed-dialog';
 import { badgeClass } from '../../../../shared/utils/badge.util';
+import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-beds',
   standalone: true,
-  imports: [CommonModule, StatCard, MatTableModule],
+  imports: [CommonModule, StatCard, MatTableModule, MatIconModule],
   templateUrl: './beds.html',
   styleUrl: './beds.scss',
 })
 export class BedsComponent implements OnInit {
+  private readonly confirmDialog = inject(ConfirmDialogService);
+
   beds: Bed[] = [];
   departments: Department[] = [];
   badgeClass = badgeClass;
@@ -121,5 +125,40 @@ export class BedsComponent implements OnInit {
       next: () => this.loadBeds(),
       error: (error) => console.error('Failed to release bed', error),
     });
+  }
+
+  openEditBedDialog(bed: Bed): void {
+    const dialogRef = this.dialog.open(AddBedDialog, {
+      width: '600px',
+      maxWidth: '95vw',
+      panelClass: 'pulseops-form-dialog',
+      autoFocus: false,
+      data: { bed },
+    });
+
+    dialogRef.afterClosed().subscribe((updated) => {
+      if (updated) {
+        this.loadBeds();
+      }
+    });
+  }
+
+  deleteBed(bed: Bed): void {
+    this.confirmDialog
+      .confirm({
+        title: 'Delete Bed',
+        message: `Are you sure you want to delete bed "${bed.bed_number}"? This cannot be undone.`,
+        confirmLabel: 'Delete',
+        danger: true,
+      })
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
+        }
+        this.bedService.deleteBed(bed.id).subscribe({
+          next: () => this.loadBeds(),
+          error: (error) => console.error('Failed to delete bed', error),
+        });
+      });
   }
 }

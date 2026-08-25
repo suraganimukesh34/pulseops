@@ -665,6 +665,58 @@ mat-card {
   cursor: not-allowed;
 }
 
+.form-dialog .header-icon.danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+}
+
+.form-dialog .submit-button.danger-button {
+  background: var(--danger);
+}
+
+/* ==========================================================
+   Shared row-action icon buttons — Edit / Delete, used across
+   every list page's Actions column.
+   ========================================================== */
+
+.icon-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.icon-action-btn:last-child {
+  margin-right: 0;
+}
+
+.icon-action-btn mat-icon {
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+}
+
+.icon-action-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.icon-action-btn.danger:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
 .form-dialog .button-spinner {
   width: 14px;
   height: 14px;

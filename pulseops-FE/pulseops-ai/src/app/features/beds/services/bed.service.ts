@@ -19,6 +19,14 @@ export class BedService {
     return this.http.post<Bed>(this.apiUrl, bed);
   }
 
+  updateBed(id: string, bed: BedCreate): Observable<Bed> {
+    return this.http.put<Bed>(`${this.apiUrl}/${id}`, bed);
+  }
+
+  deleteBed(id: string): Observable<Bed> {
+    return this.http.delete<Bed>(`${this.apiUrl}/${id}`);
+  }
+
   admitPatient(bedId: string, request: BedAdmitRequest): Observable<Bed> {
     return this.http.post<Bed>(`${this.apiUrl}/${bedId}/admit`, request);
   }

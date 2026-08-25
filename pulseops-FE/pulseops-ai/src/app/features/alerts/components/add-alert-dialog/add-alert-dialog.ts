@@ -1,10 +1,14 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject, OnInit, Optional } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { AlertCreate } from '../../models/alert.model';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Alert, AlertCreate } from '../../models/alert.model';
 import { AlertService } from '../../services/alert.service';
 import { DepartmentService } from '../../../departments/services/department.service';
 import { Department } from '../../../departments/models/department.model';
+
+export interface AddAlertDialogData {
+  alert: Alert;
+}
 
 @Component({
   selector: 'app-add-alert-dialog',
@@ -19,6 +23,10 @@ export class AddAlertDialog implements OnInit {
   private readonly departmentService = inject(DepartmentService);
   private readonly dialogRef = inject(MatDialogRef<AddAlertDialog>);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  readonly isEditMode: boolean;
+  private readonly editingId: string | null;
+  private readonly editingAlert: Alert | null;
 
   isSubmitting = false;
   submitError = '';
@@ -49,6 +57,22 @@ export class AddAlertDialog implements OnInit {
     return this.alertForm.controls.source;
   }
 
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) data: AddAlertDialogData | null) {
+    this.isEditMode = !!data?.alert;
+    this.editingId = data?.alert.id ?? null;
+    this.editingAlert = data?.alert ?? null;
+
+    if (data?.alert) {
+      this.alertForm.setValue({
+        severity: data.alert.severity,
+        category: data.alert.category,
+        message: data.alert.message,
+        source: data.alert.source,
+        department_id: data.alert.department_id ?? '',
+      });
+    }
+  }
+
   ngOnInit(): void {
     this.departmentService.getDepartments().subscribe({
       next: (departments) => {
@@ -77,20 +101,24 @@ export class AddAlertDialog implements OnInit {
       message: formValue.message.trim(),
       source: formValue.source.trim(),
       department_id: formValue.department_id || null,
-      timestamp: new Date().toISOString(),
-      acknowledged: false,
-      acknowledged_by: null,
+      timestamp: this.editingAlert?.timestamp ?? new Date().toISOString(),
+      acknowledged: this.editingAlert?.acknowledged ?? false,
+      acknowledged_by: this.editingAlert?.acknowledged_by ?? null,
     };
 
-    this.alertService.createAlert(alert).subscribe({
-      next: (created) => {
+    const request$ = this.isEditMode
+      ? this.alertService.updateAlert(this.editingId!, alert)
+      : this.alertService.createAlert(alert);
+
+    request$.subscribe({
+      next: (saved) => {
         this.isSubmitting = false;
-        this.dialogRef.close(created);
+        this.dialogRef.close(saved);
       },
       error: (error) => {
-        console.error('Failed to create alert', error);
+        console.error('Failed to save alert', error);
         this.isSubmitting = false;
-        this.submitError = 'Unable to add alert. Please try again.';
+        this.submitError = `Unable to ${this.isEditMode ? 'update' : 'add'} alert. Please try again.`;
       },
     });
   }

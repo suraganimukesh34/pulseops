@@ -1,10 +1,14 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject, OnInit, Optional } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { BedCreate } from '../../models/bed.model';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Bed, BedCreate } from '../../models/bed.model';
 import { BedService } from '../../services/bed.service';
 import { Department } from '../../../departments/models/department.model';
 import { DepartmentService } from '../../../departments/services/department.service';
+
+export interface AddBedDialogData {
+  bed: Bed;
+}
 
 @Component({
   selector: 'app-add-bed-dialog',
@@ -19,6 +23,11 @@ export class AddBedDialog implements OnInit {
   private readonly departmentService = inject(DepartmentService);
   private readonly dialogRef = inject(MatDialogRef<AddBedDialog>);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  readonly isEditMode: boolean;
+  private readonly editingId: string | null;
+  private readonly existingPatientId: string | null;
+  private readonly existingAdmittedDate: string | null;
 
   isSubmitting = false;
   submitError = '';
@@ -41,6 +50,21 @@ export class AddBedDialog implements OnInit {
   }
   get status() {
     return this.bedForm.controls.status;
+  }
+
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) data: AddBedDialogData | null) {
+    this.isEditMode = !!data?.bed;
+    this.editingId = data?.bed.id ?? null;
+    this.existingPatientId = data?.bed.patient_id ?? null;
+    this.existingAdmittedDate = data?.bed.admitted_date ?? null;
+
+    if (data?.bed) {
+      this.bedForm.setValue({
+        department_id: data.bed.department_id,
+        bed_number: data.bed.bed_number,
+        status: data.bed.status,
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -69,19 +93,23 @@ export class AddBedDialog implements OnInit {
       department_id: formValue.department_id,
       bed_number: formValue.bed_number.trim(),
       status: formValue.status,
-      patient_id: null,
-      admitted_date: null,
+      patient_id: this.isEditMode ? this.existingPatientId : null,
+      admitted_date: this.isEditMode ? this.existingAdmittedDate : null,
     };
 
-    this.bedService.createBed(bed).subscribe({
-      next: (created) => {
+    const request$ = this.isEditMode
+      ? this.bedService.updateBed(this.editingId!, bed)
+      : this.bedService.createBed(bed);
+
+    request$.subscribe({
+      next: (saved) => {
         this.isSubmitting = false;
-        this.dialogRef.close(created);
+        this.dialogRef.close(saved);
       },
       error: (error) => {
-        console.error('Failed to create bed', error);
+        console.error('Failed to save bed', error);
         this.isSubmitting = false;
-        this.submitError = 'Unable to add bed. Please try again.';
+        this.submitError = `Unable to ${this.isEditMode ? 'update' : 'add'} bed. Please try again.`;
       },
     });
   }

@@ -22,4 +22,12 @@ export class InventoryService {
   restockItem(itemId: string, request: RestockRequest): Observable<InventoryItem> {
     return this.http.post<InventoryItem>(`${this.apiUrl}/${itemId}/restock`, request);
   }
+
+  updateItem(id: string, item: InventoryItemCreate): Observable<InventoryItem> {
+    return this.http.put<InventoryItem>(`${this.apiUrl}/${id}`, item);
+  }
+
+  deleteItem(id: string): Observable<InventoryItem> {
+    return this.http.delete<InventoryItem>(`${this.apiUrl}/${id}`);
+  }
 }

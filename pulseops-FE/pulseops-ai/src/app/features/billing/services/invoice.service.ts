@@ -22,4 +22,12 @@ export class InvoiceService {
   markPaid(invoiceId: string): Observable<Invoice> {
     return this.http.post<Invoice>(`${this.apiUrl}/${invoiceId}/mark-paid`, {});
   }
+
+  updateInvoice(id: string, invoice: InvoiceCreate): Observable<Invoice> {
+    return this.http.put<Invoice>(`${this.apiUrl}/${id}`, invoice);
+  }
+
+  deleteInvoice(id: string): Observable<Invoice> {
+    return this.http.delete<Invoice>(`${this.apiUrl}/${id}`);
+  }
 }

@@ -22,4 +22,12 @@ export class AlertService {
   acknowledgeAlert(alertId: string): Observable<Alert> {
     return this.http.post<Alert>(`${this.apiUrl}/${alertId}/acknowledge`, {});
   }
+
+  updateAlert(id: string, alert: AlertCreate): Observable<Alert> {
+    return this.http.put<Alert>(`${this.apiUrl}/${id}`, alert);
+  }
+
+  deleteAlert(id: string): Observable<Alert> {
+    return this.http.delete<Alert>(`${this.apiUrl}/${id}`);
+  }
 }

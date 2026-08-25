@@ -65,6 +65,14 @@
                         Mark Paid
                     </button>
                     }
+                    <button type="button" class="icon-action-btn" aria-label="Edit invoice"
+                        (click)="openEditInvoiceDialog(invoice)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button type="button" class="icon-action-btn danger" aria-label="Delete invoice"
+                        (click)="deleteInvoice(invoice)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
                 </td>
             </ng-container>
 

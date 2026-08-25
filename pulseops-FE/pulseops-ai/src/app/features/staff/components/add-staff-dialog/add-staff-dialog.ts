@@ -1,10 +1,14 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject, OnInit, Optional } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { StaffCreate } from '../../models/staff.model';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Staff, StaffCreate } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
 import { Department } from '../../../departments/models/department.model';
 import { DepartmentService } from '../../../departments/services/department.service';
+
+export interface AddStaffDialogData {
+  staff: Staff;
+}
 
 @Component({
   selector: 'app-add-staff-dialog',
@@ -19,6 +23,9 @@ export class AddStaffDialog implements OnInit {
   private readonly departmentService = inject(DepartmentService);
   private readonly dialogRef = inject(MatDialogRef<AddStaffDialog>);
   private readonly cdr = inject(ChangeDetectorRef);
+
+  readonly isEditMode: boolean;
+  private readonly editingId: string | null;
 
   isSubmitting = false;
   submitError = '';
@@ -40,6 +47,25 @@ export class AddStaffDialog implements OnInit {
     phone: ['', Validators.required],
     joined_date: ['', Validators.required],
   });
+
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) data: AddStaffDialogData | null) {
+    this.isEditMode = !!data?.staff;
+    this.editingId = data?.staff.id ?? null;
+
+    if (data?.staff) {
+      this.staffForm.setValue({
+        name: data.staff.name,
+        role: data.staff.role,
+        department_id: data.staff.department_id,
+        specialization: data.staff.specialization ?? '',
+        shift: data.staff.shift,
+        status: data.staff.status,
+        email: data.staff.email,
+        phone: data.staff.phone,
+        joined_date: data.staff.joined_date,
+      });
+    }
+  }
 
   get name() {
     return this.staffForm.controls.name;
@@ -100,15 +126,19 @@ export class AddStaffDialog implements OnInit {
       joined_date: formValue.joined_date,
     };
 
-    this.staffService.createStaff(member).subscribe({
-      next: (created) => {
+    const request$ = this.isEditMode
+      ? this.staffService.updateStaff(this.editingId!, member)
+      : this.staffService.createStaff(member);
+
+    request$.subscribe({
+      next: (saved) => {
         this.isSubmitting = false;
-        this.dialogRef.close(created);
+        this.dialogRef.close(saved);
       },
       error: (error) => {
-        console.error('Failed to create staff member', error);
+        console.error('Failed to save staff member', error);
         this.isSubmitting = false;
-        this.submitError = 'Unable to add staff member. Please try again.';
+        this.submitError = `Unable to ${this.isEditMode ? 'update' : 'add'} staff member. Please try again.`;
       },
     });
   }

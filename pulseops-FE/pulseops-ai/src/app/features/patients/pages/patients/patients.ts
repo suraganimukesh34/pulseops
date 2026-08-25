@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 
 import { PatientService } from '../../services/patient';
 import { Patient } from '../../models/patient.model';
@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { PatientDetails } from '../../components/patient-details/patient-details';
 import { badgeClass } from '../../../../shared/utils/badge.util';
+import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-patients',
@@ -32,6 +33,8 @@ import { badgeClass } from '../../../../shared/utils/badge.util';
   styleUrl: './patients.scss'
 })
 export class PatientsComponent implements OnInit {
+
+  private readonly confirmDialog = inject(ConfirmDialogService);
 
   patients: Patient[] = [];
   patientsCount = 0;
@@ -54,7 +57,8 @@ export class PatientsComponent implements OnInit {
     'location',
     'status',
     'priority',
-    'ai'
+    'ai',
+    'actions'
   ];
 
   dataSource = new MatTableDataSource<Patient>();
@@ -103,6 +107,41 @@ export class PatientsComponent implements OnInit {
         patientId: patientId
       }
     });
+  }
+
+  openEditPatientDialog(patient: Patient): void {
+    const dialogRef = this.dialog.open(AddPatientDialog, {
+      width: '700px',
+      maxWidth: '95vw',
+      panelClass: 'pulseops-form-dialog',
+      autoFocus: false,
+      data: { patient }
+    });
+
+    dialogRef.afterClosed().subscribe((updated) => {
+      if (updated) {
+        this.loadPatients();
+      }
+    });
+  }
+
+  deletePatientRecord(patient: Patient): void {
+    this.confirmDialog
+      .confirm({
+        title: 'Delete Patient',
+        message: `Are you sure you want to delete the record for "${patient.name}"? This cannot be undone.`,
+        confirmLabel: 'Delete',
+        danger: true
+      })
+      .subscribe((confirmed) => {
+        if (!confirmed) {
+          return;
+        }
+        this.patientService.deletePatient(patient.id).subscribe({
+          next: () => this.loadPatients(),
+          error: (error) => console.error('Failed to delete patient', error)
+        });
+      });
   }
 
 }

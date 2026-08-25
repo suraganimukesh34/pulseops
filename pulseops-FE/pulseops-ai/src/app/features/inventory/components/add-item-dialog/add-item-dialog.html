@@ -4,13 +4,18 @@
         <div class="header-content">
             <div class="header-icon">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
+                    @if (isEditMode) {
+                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5Z" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    } @else {
                     <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" />
+                    }
                 </svg>
             </div>
             <div>
-                <h2>Add Item</h2>
-                <p>Add a new inventory item</p>
+                <h2>{{ isEditMode ? 'Edit Item' : 'Add Item' }}</h2>
+                <p>{{ isEditMode ? 'Update this inventory item' : 'Add a new inventory item' }}</p>
             </div>
         </div>
 
@@ -124,13 +129,18 @@
             <button type="submit" class="submit-button" [disabled]="itemForm.invalid || isSubmitting">
                 @if (isSubmitting) {
                 <span class="button-spinner"></span>
-                <span>Adding...</span>
+                <span>{{ isEditMode ? 'Saving...' : 'Adding...' }}</span>
                 } @else {
                 <svg viewBox="0 0 24 24" aria-hidden="true">
+                    @if (isEditMode) {
+                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5Z" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    } @else {
                     <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" />
+                    }
                 </svg>
-                <span>Add Item</span>
+                <span>{{ isEditMode ? 'Save Changes' : 'Add Item' }}</span>
                 }
             </button>
         </footer>
