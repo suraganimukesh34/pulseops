@@ -1,105 +1,35 @@
-import os
-from datetime import datetime, timedelta, timezone
-
-import jwt
+from app.core.security import create_access_token, verify_password
 from app.features.auth.schemas import LoginRequest
-from dotenv import load_dotenv
-from pwdlib import PasswordHash
-
-load_dotenv()
-
-password_hash = PasswordHash.recommended()
-
-SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-
-if not SECRET_KEY:
-    raise RuntimeError("JWT_SECRET_KEY environment variable is not set")
-
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+from app.features.users.service import UserRecord, find_user_by_email
 
 
-def hash_password(password: str) -> str:
-    """Hash a plain-text password."""
-    return password_hash.hash(password)
+def authenticate_user(login: LoginRequest) -> UserRecord | None:
+    """Authenticate the user and return their user record."""
 
+    user = find_user_by_email(login.email)
 
-def verify_password(
-    plain_password: str,
-    hashed_password: str,
-) -> bool:
-    """Verify a plain-text password against its hash."""
-    return password_hash.verify(
-        plain_password,
-        hashed_password,
-    )
-
-
-def create_access_token(
-    data: dict,
-    expires_delta: timedelta | None = None,
-) -> str:
-    """Create a signed JWT access token."""
-
-    payload = data.copy()
-
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-        )
-
-    payload.update({"exp": expire})
-
-    return jwt.encode(
-        payload,
-        SECRET_KEY,
-        algorithm=ALGORITHM,
-    )
-
-
-# Temporary development user.
-# This will later be replaced by PostgreSQL.
-TEMP_USER = {
-    "email": os.getenv(
-        "DEV_ADMIN_EMAIL",
-        "admin@pulseops.ai",
-    ),
-    "hashed_password": hash_password(
-        os.getenv(
-            "DEV_ADMIN_PASSWORD",
-            "Admin@123",
-        )
-    ),
-}
-
-
-def authenticate_user(login: LoginRequest) -> str | None:
-    """Authenticate the user and return their email."""
-
-    if login.email != TEMP_USER["email"]:
+    if user is None or not user.active:
         return None
 
-    if not verify_password(
-        login.password,
-        TEMP_USER["hashed_password"],
-    ):
+    if not verify_password(login.password, user.hashed_password):
         return None
 
-    return TEMP_USER["email"]
+    return user
 
 
 def login_user(login: LoginRequest) -> str:
     """Authenticate the user and create an access token."""
 
-    user_email = authenticate_user(login)
+    user = authenticate_user(login)
 
-    if user_email is None:
+    if user is None:
         raise ValueError("Invalid email or password")
 
     return create_access_token(
         {
-            "sub": user_email,
+            "sub": user.id,
+            "email": user.email,
+            "name": user.name,
+            "role": user.role.value,
         }
     )

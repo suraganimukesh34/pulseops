@@ -1,0 +1,76 @@
+<div class="list-page">
+    <div class="summary-grid">
+
+        <app-stat-card icon="event" title="Total Appointments" [value]="appointments.length.toString()"
+            subtitle="All scheduled visits" color="var(--info)">
+        </app-stat-card>
+
+        <app-stat-card icon="schedule" title="Scheduled" [value]="scheduledCount.toString()"
+            subtitle="Upcoming appointments" color="var(--warning)">
+        </app-stat-card>
+
+        <app-stat-card icon="check_circle" title="Completed" [value]="completedCount.toString()"
+            subtitle="Visits completed" color="var(--success)">
+        </app-stat-card>
+
+    </div>
+
+    <div class="list-table">
+
+        <div class="table-header">
+            <div>
+                <h2>Appointments</h2>
+                <span>{{ appointments.length }} Appointments</span>
+            </div>
+
+            <button class="add-btn" type="button" (click)="openAddAppointmentDialog()">
+                + Add Appointment
+            </button>
+        </div>
+
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Date</th>
+                <td mat-cell *matCellDef="let appt">{{ appt.date }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef>Time</th>
+                <td mat-cell *matCellDef="let appt">{{ appt.time }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="patient_name">
+                <th mat-header-cell *matHeaderCellDef>Patient</th>
+                <td mat-cell *matCellDef="let appt">{{ appt.patient_name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="doctor_name">
+                <th mat-header-cell *matHeaderCellDef>Doctor</th>
+                <td mat-cell *matCellDef="let appt">{{ appt.doctor_name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="department">
+                <th mat-header-cell *matHeaderCellDef>Department</th>
+                <td mat-cell *matCellDef="let appt">{{ departmentName(appt.department_id) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let appt">
+                    <span class="badge" [ngClass]="badgeClass(appt.status)">{{ appt.status }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="reason">
+                <th mat-header-cell *matHeaderCellDef>Reason</th>
+                <td mat-cell *matCellDef="let appt">{{ appt.reason }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+
+    </div>
+</div>

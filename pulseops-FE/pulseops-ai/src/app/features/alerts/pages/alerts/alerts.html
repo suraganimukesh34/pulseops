@@ -1,0 +1,79 @@
+<div class="list-page">
+    <div class="summary-grid">
+
+        <app-stat-card icon="notifications_active" title="Active Alerts" [value]="activeCount.toString()"
+            subtitle="Awaiting acknowledgement" color="var(--danger)">
+        </app-stat-card>
+
+        <app-stat-card icon="report" title="Critical" [value]="criticalCount.toString()"
+            subtitle="Unacknowledged critical alerts" color="var(--danger)">
+        </app-stat-card>
+
+        <app-stat-card icon="check_circle" title="Acknowledged" [value]="acknowledgedCount.toString()"
+            subtitle="Resolved or noted" color="var(--success)">
+        </app-stat-card>
+
+    </div>
+
+    <div class="list-table">
+
+        <div class="table-header">
+            <div>
+                <h2>Alerts</h2>
+                <span>{{ alerts.length }} Alerts</span>
+            </div>
+
+            <button class="add-btn" type="button" (click)="openAddAlertDialog()">
+                + Add Alert
+            </button>
+        </div>
+
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="severity">
+                <th mat-header-cell *matHeaderCellDef>Severity</th>
+                <td mat-cell *matCellDef="let alert">
+                    <span class="badge" [ngClass]="badgeClass(alert.severity)">{{ alert.severity }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef>Category</th>
+                <td mat-cell *matCellDef="let alert">{{ alert.category }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="message">
+                <th mat-header-cell *matHeaderCellDef>Message</th>
+                <td mat-cell *matCellDef="let alert">{{ alert.message }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="source">
+                <th mat-header-cell *matHeaderCellDef>Source</th>
+                <td mat-cell *matCellDef="let alert">{{ alert.source }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="timestamp">
+                <th mat-header-cell *matHeaderCellDef>Timestamp</th>
+                <td mat-cell *matCellDef="let alert">{{ formatTimestamp(alert.timestamp) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let alert">
+                    @if (!alert.acknowledged) {
+                    <button type="button" class="submit-button" (click)="acknowledge(alert)">
+                        Acknowledge
+                    </button>
+                    } @else {
+                    <span>Acknowledged</span>
+                    }
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+
+    </div>
+</div>

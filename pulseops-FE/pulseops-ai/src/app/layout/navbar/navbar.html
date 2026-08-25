@@ -19,13 +19,36 @@
 
         </div>
 
-        <button mat-icon-button class="icon-btn">
+        <button mat-icon-button class="icon-btn" [matMenuTriggerFor]="alertsMenu"
+            [matBadge]="unacknowledgedAlerts.length > 0 ? unacknowledgedAlerts.length : null" matBadgeColor="warn"
+            matBadgeSize="small">
             <mat-icon>notifications</mat-icon>
         </button>
 
-        <button mat-icon-button class="icon-btn">
+        <mat-menu #alertsMenu="matMenu">
+            @if (unacknowledgedAlerts.length === 0) {
+            <button mat-menu-item disabled>No active alerts</button>
+            } @else {
+            @for (alert of unacknowledgedAlerts.slice(0, 5); track alert.id) {
+            <button mat-menu-item disabled>{{ alert.message }}</button>
+            }
+            }
+        </mat-menu>
+
+        <button mat-icon-button class="icon-btn" [matMenuTriggerFor]="accountMenu">
             <mat-icon>account_circle</mat-icon>
         </button>
+
+        <mat-menu #accountMenu="matMenu">
+            <div class="account-info">
+                <strong>{{ currentUser.user()?.name || 'User' }}</strong>
+                <span>{{ currentUser.user()?.role }}</span>
+            </div>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
 
     </div>
 

@@ -144,6 +144,11 @@ showPassword
 
                 </div>
 
+                @if (loginError) {
+                <div class="error-message">
+                    {{ loginError }}
+                </div>
+                }
 
                 <!-- Submit -->
                 <button type="submit" class="login-button" [disabled]="isLoading">

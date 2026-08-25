@@ -1,5 +1,5 @@
 .patients-container {
-    margin: 24px;
+  margin: 24px;
 }
 
 .summary-grid {
@@ -142,39 +142,28 @@ tbody tr:hover {
 }
 
 table {
-
-width: 100%;
-background: transparent;
-
+  width: 100%;
+  background: transparent;
 }
 
 .mat-mdc-header-row {
-
-background: rgba(255,255,255,.04);
-
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .mat-mdc-header-cell {
-
-color: var(--text-secondary);
-font-weight: 600;
-font-size: 13px;
-
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 13px;
 }
 
 .mat-mdc-cell {
-
-color: var(--text-primary);
-border-bottom: 1px solid rgba(255,255,255,.05);
-
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .mat-mdc-row:hover {
-
-background: rgba(59,130,246,.08);
-
+  background: rgba(59, 130, 246, 0.08);
 }
-
 
 @media (max-width: 1200px) {
   .summary-grid {
@@ -186,4 +175,94 @@ background: rgba(59,130,246,.08);
   .summary-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.ai-summary-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+
+  background: rgba(33, 150, 243, 0.85);
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ai-summary-btn:hover {
+  background: #2196f3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ai-summary-btn:active {
+  transform: translateY(0);
+}
+
+.ai-summary-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-critical {
+  background: rgba(244, 67, 54, 0.15);
+  color: #ff6b6b;
+}
+
+.status-stable {
+  background: rgba(76, 175, 80, 0.15);
+  color: #72d572;
+}
+
+.status-recovering {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffd54f;
+}
+
+.status-waiting {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ffb74d;
+}
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.priority-high {
+  color: #ff6b6b;
+}
+
+.priority-medium {
+  color: #ffd54f;
+}
+
+.priority-low {
+  color: #72d572;
 }

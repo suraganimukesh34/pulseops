@@ -1,0 +1,66 @@
+<div class="list-page">
+    <div class="summary-grid">
+
+        <app-stat-card icon="apartment" title="Total Departments" [value]="departments.length.toString()"
+            subtitle="Across the hospital" color="var(--info)">
+        </app-stat-card>
+
+        <app-stat-card icon="check_circle" title="Active" [value]="activeCount.toString()"
+            subtitle="Currently operating" color="var(--success)">
+        </app-stat-card>
+
+        <app-stat-card icon="bed" title="Total Bed Capacity" [value]="totalBedCapacity.toString()"
+            subtitle="Beds across all wards" color="var(--warning)">
+        </app-stat-card>
+
+    </div>
+
+    <div class="list-table">
+
+        <div class="table-header">
+            <div>
+                <h2>Departments</h2>
+                <span>{{ departments.length }} Departments</span>
+            </div>
+
+            <button class="add-btn" type="button" (click)="openAddDepartmentDialog()">
+                + Add Department
+            </button>
+        </div>
+
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let dept">{{ dept.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="floor">
+                <th mat-header-cell *matHeaderCellDef>Floor</th>
+                <td mat-cell *matCellDef="let dept">{{ dept.floor }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="head_doctor_name">
+                <th mat-header-cell *matHeaderCellDef>Head Doctor</th>
+                <td mat-cell *matCellDef="let dept">{{ dept.head_doctor_name || '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="bed_capacity">
+                <th mat-header-cell *matHeaderCellDef>Bed Capacity</th>
+                <td mat-cell *matCellDef="let dept">{{ dept.bed_capacity }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let dept">
+                    <span class="badge" [ngClass]="badgeClass(dept.status)">{{ dept.status }}</span>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+
+    </div>
+</div>

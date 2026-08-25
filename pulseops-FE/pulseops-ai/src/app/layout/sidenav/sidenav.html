@@ -27,6 +27,14 @@
 
         </a>
 
+        <a routerLink="/reports" routerLinkActive="active">
+
+            <mat-icon>bar_chart</mat-icon>
+
+            <span>Reports</span>
+
+        </a>
+
         <div class="nav-section">
             OPERATIONS
         </div>
@@ -36,6 +44,22 @@
             <mat-icon>groups</mat-icon>
 
             <span>Patients</span>
+
+        </a>
+
+        <a routerLink="/departments" routerLinkActive="active">
+
+            <mat-icon>apartment</mat-icon>
+
+            <span>Departments</span>
+
+        </a>
+
+        <a routerLink="/appointments" routerLinkActive="active">
+
+            <mat-icon>event</mat-icon>
+
+            <span>Appointments</span>
 
         </a>
 
@@ -52,6 +76,26 @@
             <mat-icon>badge</mat-icon>
 
             <span>Staff</span>
+
+        </a>
+
+        <div class="nav-section">
+            FINANCE &amp; SUPPLY
+        </div>
+
+        <a routerLink="/billing" routerLinkActive="active">
+
+            <mat-icon>receipt_long</mat-icon>
+
+            <span>Billing</span>
+
+        </a>
+
+        <a routerLink="/inventory" routerLinkActive="active">
+
+            <mat-icon>inventory_2</mat-icon>
+
+            <span>Inventory</span>
 
         </a>
 
@@ -75,6 +119,18 @@
 
         </a>
 
+        <div class="nav-section">
+            SYSTEM
+        </div>
+
+        <a routerLink="/settings" routerLinkActive="active">
+
+            <mat-icon>settings</mat-icon>
+
+            <span>Settings</span>
+
+        </a>
+
     </nav>
 
     <div class="sidebar-footer">
@@ -85,9 +141,9 @@
 
             <div>
 
-                <strong>Administrator</strong>
+                <strong>{{ currentUser.user()?.name || 'Administrator' }}</strong>
 
-                <span>Hospital Admin</span>
+                <span>{{ currentUser.user()?.role || 'Hospital Admin' }}</span>
 
             </div>
 

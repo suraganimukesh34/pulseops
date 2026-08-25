@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core"
 import { Observable } from "rxjs";
+import { environment } from "../../../../environments/environment";
 
 export interface LoginRequest {
     email: string,
@@ -16,7 +17,7 @@ export interface TokenResponse {
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly apiUrl = 'http://127.0.0.1:8000/auth';
+    private readonly apiUrl = `${environment.apiUrl}/auth`;
 
     constructor(private http: HttpClient) {}
 
@@ -25,5 +26,9 @@ export class AuthService {
             `${this.apiUrl}/login`,
             credentials
         );
+    }
+
+    logout(): void {
+        sessionStorage.removeItem('access_token');
     }
 }

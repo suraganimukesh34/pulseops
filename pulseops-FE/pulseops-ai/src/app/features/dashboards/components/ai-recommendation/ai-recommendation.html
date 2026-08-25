@@ -12,9 +12,9 @@
 
             <div>
 
-                <h3>AI Operational Recommendation</h3>
+                <h3>AI Copilot</h3>
 
-                <span>Generated just now</span>
+                <span>Preview — coming soon</span>
 
             </div>
 
@@ -24,45 +24,29 @@
 
     <div class="summary">
 
-        ICU occupancy has exceeded <strong>90%</strong>.
-        Based on current hospital operations, PulseOps AI recommends
-        the following actions.
+        {{ statusMessage }}
 
     </div>
 
     <div class="section-title">
 
-        Recommended Actions
+        Planned Capabilities
 
     </div>
 
-    <div class="item" *ngFor="let recommendation of recommendations">
+    <div class="item" *ngFor="let insight of insights">
 
-        <mat-icon>check_circle</mat-icon>
+        <mat-icon>auto_awesome</mat-icon>
 
-        <span>{{ recommendation }}</span>
-
-    </div>
-
-    <div class="section-title">
-
-        Expected Impact
-
-    </div>
-
-    <div class="item" *ngFor="let impact of impacts">
-
-        <mat-icon>trending_up</mat-icon>
-
-        <span>{{ impact }}</span>
+        <span><strong>{{ insight.title }}:</strong> {{ insight.description }}</span>
 
     </div>
 
     <div class="footer">
 
-        <span>AI Confidence</span>
+        <span>Status</span>
 
-        <strong>{{ confidence }}%</strong>
+        <strong>Preview</strong>
 
     </div>
 

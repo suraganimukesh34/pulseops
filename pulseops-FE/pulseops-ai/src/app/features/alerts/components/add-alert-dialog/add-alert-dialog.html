@@ -1,0 +1,141 @@
+<div class="form-dialog">
+
+    <header class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </div>
+            <div>
+                <h2>Add Alert</h2>
+                <p>Raise a new operational alert</p>
+            </div>
+        </div>
+
+        <button type="button" class="close-button" aria-label="Close dialog" (click)="cancel()"
+            [disabled]="isSubmitting">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+            </svg>
+        </button>
+    </header>
+
+    <form class="dialog-form" [formGroup]="alertForm" (ngSubmit)="submit()" novalidate>
+
+        <section class="form-section">
+            <div class="section-heading">
+                <div class="section-indicator"></div>
+                <div>
+                    <h3>Alert Details</h3>
+                    <p>Basic information about the alert</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="severity">Severity <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="severity" formControlName="severity"
+                            [class.invalid]="severity.invalid && severity.touched">
+                            @for (option of severityOptions; track option) {
+                            <option [value]="option">{{ option }}</option>
+                            }
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="category">Category <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="category" formControlName="category"
+                            [class.invalid]="category.invalid && category.touched">
+                            @for (option of categoryOptions; track option) {
+                            <option [value]="option">{{ option }}</option>
+                            }
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="field field-full">
+                    <label for="message">Message <span class="required">*</span></label>
+                    <textarea id="message" formControlName="message" rows="3"
+                        placeholder="Describe the alert"
+                        [class.invalid]="message.invalid && message.touched"></textarea>
+                    @if (message.invalid && message.touched) {
+                    <div class="error-message">A message is required.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="source">Source <span class="required">*</span></label>
+                    <input id="source" type="text" formControlName="source" placeholder="e.g. Cardiac Monitor"
+                        autocomplete="off" [class.invalid]="source.invalid && source.touched" />
+                    @if (source.invalid && source.touched) {
+                    <div class="error-message">Source is required.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="departmentId">Department</label>
+                    <div class="select-wrapper">
+                        <select id="departmentId" formControlName="department_id">
+                            <option value="">None</option>
+                            @for (dept of departments; track dept.id) {
+                            <option [value]="dept.id">{{ dept.name }}</option>
+                            }
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        @if (submitError) {
+        <div class="submit-error" role="alert">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 9v4M12 17h.01M10.3 3.8 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span>{{ submitError }}</span>
+        </div>
+        }
+
+        <footer class="dialog-footer">
+            <button type="button" class="cancel-button" (click)="cancel()" [disabled]="isSubmitting">
+                Cancel
+            </button>
+            <button type="submit" class="submit-button" [disabled]="alertForm.invalid || isSubmitting">
+                @if (isSubmitting) {
+                <span class="button-spinner"></span>
+                <span>Adding...</span>
+                } @else {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>Add Alert</span>
+                }
+            </button>
+        </footer>
+
+    </form>
+
+</div>

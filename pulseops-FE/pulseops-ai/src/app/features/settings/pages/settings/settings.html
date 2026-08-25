@@ -1,0 +1,142 @@
+<div class="list-page">
+
+    <mat-tab-group>
+
+        <mat-tab label="Hospital Profile">
+
+            <div class="tab-content">
+                <div class="form-dialog" style="max-height: none; background: transparent;">
+
+                    <form class="dialog-form" style="overflow: visible; padding: 24px 0 0;"
+                        [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+
+                        <section class="form-section">
+                            <div class="section-heading">
+                                <div class="section-indicator"></div>
+                                <div>
+                                    <h3>Hospital Information</h3>
+                                    <p>Basic details shown across the platform</p>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+
+                                <div class="field field-full">
+                                    <label for="hospitalName">Hospital Name <span class="required">*</span></label>
+                                    <input id="hospitalName" type="text" formControlName="hospital_name"
+                                        [class.invalid]="!isAdmin" [readonly]="!isAdmin" />
+                                </div>
+
+                                <div class="field field-full">
+                                    <label for="address">Address <span class="required">*</span></label>
+                                    <input id="address" type="text" formControlName="address" [readonly]="!isAdmin" />
+                                </div>
+
+                                <div class="field">
+                                    <label for="phone">Phone <span class="required">*</span></label>
+                                    <input id="phone" type="text" formControlName="phone" [readonly]="!isAdmin" />
+                                </div>
+
+                                <div class="field">
+                                    <label for="email">Email <span class="required">*</span></label>
+                                    <input id="email" type="email" formControlName="email" [readonly]="!isAdmin" />
+                                </div>
+
+                                <div class="field">
+                                    <label for="timezone">Timezone <span class="required">*</span></label>
+                                    <input id="timezone" type="text" formControlName="timezone"
+                                        [readonly]="!isAdmin" />
+                                </div>
+
+                            </div>
+                        </section>
+
+                        @if (saveError) {
+                        <div class="submit-error" role="alert">
+                            <span>{{ saveError }}</span>
+                        </div>
+                        }
+
+                        @if (saveSuccess) {
+                        <div class="submit-error" style="border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.1); color: #86efac;">
+                            <span>Hospital profile updated.</span>
+                        </div>
+                        }
+
+                        @if (isAdmin) {
+                        <footer class="dialog-footer" style="margin: 0; background: none; position: static;">
+                            <button type="submit" class="submit-button" [disabled]="profileForm.invalid || isSaving">
+                                @if (isSaving) {
+                                <span class="button-spinner"></span>
+                                <span>Saving...</span>
+                                } @else {
+                                <span>Save Changes</span>
+                                }
+                            </button>
+                        </footer>
+                        } @else {
+                        <p class="readonly-note">Only administrators can edit the hospital profile.</p>
+                        }
+
+                    </form>
+
+                </div>
+            </div>
+
+        </mat-tab>
+
+        @if (isAdmin) {
+        <mat-tab label="User Management">
+
+            <div class="tab-content">
+                <div class="list-table" style="margin-top: 20px;">
+
+                    <div class="table-header">
+                        <div>
+                            <h2>Users</h2>
+                            <span>{{ users.length }} Accounts</span>
+                        </div>
+                    </div>
+
+                    <table mat-table [dataSource]="users">
+
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef>Name</th>
+                            <td mat-cell *matCellDef="let user">{{ user.name }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef>Email</th>
+                            <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="role">
+                            <th mat-header-cell *matHeaderCellDef>Role</th>
+                            <td mat-cell *matCellDef="let user">
+                                <span class="badge badge-info">{{ user.role }}</span>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="active">
+                            <th mat-header-cell *matHeaderCellDef>Status</th>
+                            <td mat-cell *matCellDef="let user">
+                                <span class="badge" [ngClass]="user.active ? 'badge-success' : 'badge-neutral'">
+                                    {{ user.active ? 'Active' : 'Inactive' }}
+                                </span>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: userColumns"></tr>
+
+                    </table>
+
+                </div>
+            </div>
+
+        </mat-tab>
+        }
+
+    </mat-tab-group>
+
+</div>

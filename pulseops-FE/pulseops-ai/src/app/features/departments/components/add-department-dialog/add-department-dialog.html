@@ -1,0 +1,123 @@
+<div class="form-dialog">
+
+    <header class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </div>
+            <div>
+                <h2>Add Department</h2>
+                <p>Create a new hospital department</p>
+            </div>
+        </div>
+
+        <button type="button" class="close-button" aria-label="Close dialog" (click)="cancel()"
+            [disabled]="isSubmitting">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+            </svg>
+        </button>
+    </header>
+
+    <form class="dialog-form" [formGroup]="departmentForm" (ngSubmit)="submit()" novalidate>
+
+        <section class="form-section">
+            <div class="section-heading">
+                <div class="section-indicator"></div>
+                <div>
+                    <h3>Department Details</h3>
+                    <p>Basic information about the department</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field field-full">
+                    <label for="name">Name <span class="required">*</span></label>
+                    <input id="name" type="text" formControlName="name" placeholder="e.g. Cardiology"
+                        autocomplete="off" [class.invalid]="name.invalid && name.touched" />
+                    @if (name.invalid && name.touched) {
+                    <div class="error-message">Department name is required.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="floor">Floor <span class="required">*</span></label>
+                    <input id="floor" type="number" formControlName="floor" min="0" max="50"
+                        [class.invalid]="floor.invalid && floor.touched" />
+                    @if (floor.invalid && floor.touched) {
+                    <div class="error-message">Enter a valid floor number.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="bedCapacity">Bed Capacity <span class="required">*</span></label>
+                    <input id="bedCapacity" type="number" formControlName="bed_capacity" min="1" max="200"
+                        [class.invalid]="bedCapacity.invalid && bedCapacity.touched" />
+                    @if (bedCapacity.invalid && bedCapacity.touched) {
+                    <div class="error-message">Enter a valid bed capacity.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="status">Status <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="status" formControlName="status"
+                            [class.invalid]="status.invalid && status.touched">
+                            @for (option of statusOptions; track option) {
+                            <option [value]="option">{{ option }}</option>
+                            }
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="headDoctorName">Head Doctor</label>
+                    <input id="headDoctorName" type="text" formControlName="head_doctor_name"
+                        placeholder="e.g. Dr. Sarah Smith" autocomplete="off" />
+                </div>
+
+            </div>
+        </section>
+
+        @if (submitError) {
+        <div class="submit-error" role="alert">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 9v4M12 17h.01M10.3 3.8 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span>{{ submitError }}</span>
+        </div>
+        }
+
+        <footer class="dialog-footer">
+            <button type="button" class="cancel-button" (click)="cancel()" [disabled]="isSubmitting">
+                Cancel
+            </button>
+            <button type="submit" class="submit-button" [disabled]="departmentForm.invalid || isSubmitting">
+                @if (isSubmitting) {
+                <span class="button-spinner"></span>
+                <span>Adding...</span>
+                } @else {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>Add Department</span>
+                }
+            </button>
+        </footer>
+
+    </form>
+
+</div>

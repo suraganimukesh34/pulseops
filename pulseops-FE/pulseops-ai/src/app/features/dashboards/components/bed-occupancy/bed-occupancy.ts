@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardCard } from '../../../../shared/components/dashboard-card/dashboard-card';
+import { DashboardSummary } from '../../models/dashboard-summary.model';
 
 @Component({
   selector: 'app-bed-occupancy',
@@ -16,14 +17,22 @@ import { DashboardCard } from '../../../../shared/components/dashboard-card/dash
 })
 export class BedOccupancy {
 
-  totalBeds = 1000;
+  @Input() summary: DashboardSummary | null = null;
 
-  occupiedBeds = 755;
+  get totalBeds(): number {
+    return this.summary?.total_beds ?? 0;
+  }
 
-  availableBeds = 245;
+  get occupiedBeds(): number {
+    return this.summary?.occupied_beds ?? 0;
+  }
+
+  get availableBeds(): number {
+    return this.summary?.available_beds ?? 0;
+  }
 
   get occupancyPercentage(): number {
-    return Math.round((this.occupiedBeds / this.totalBeds) * 100);
+    return this.summary?.bed_occupancy_rate ?? 0;
   }
 
 }

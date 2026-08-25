@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardCard } from '../../../../shared/components/dashboard-card/dashboard-card';
-interface Department {
+import { DepartmentLoadItem } from '../../models/dashboard-summary.model';
+
+interface DepartmentRow {
   name: string;
   load: number;
 }
@@ -20,13 +22,13 @@ interface Department {
 })
 export class DepartmentLoad {
 
-  departments: Department[] = [
-    { name: 'Emergency', load: 95 },
-    { name: 'ICU', load: 88 },
-    { name: 'General Ward', load: 72 },
-    { name: 'Pediatrics', load: 54 },
-    { name: 'Cardiology', load: 63 }
-  ];
+  @Input() set departmentLoad(value: DepartmentLoadItem[] | null) {
+    this.departments = (value ?? []).map((d) => ({
+      name: d.department_name,
+      load: d.load_percentage,
+    }));
+  }
+
+  departments: DepartmentRow[] = [];
 
 }
-

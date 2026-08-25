@@ -1,0 +1,85 @@
+<div class="list-page">
+    <div class="summary-grid">
+
+        <app-stat-card icon="inventory_2" title="Total Items" [value]="items.length.toString()"
+            subtitle="Tracked in inventory" color="var(--info)">
+        </app-stat-card>
+
+        <app-stat-card icon="warning" title="Low Stock" [value]="lowStockCount.toString()"
+            subtitle="Below reorder level" color="var(--danger)">
+        </app-stat-card>
+
+        <app-stat-card icon="category" title="Categories Tracked" [value]="categoriesTracked.toString()"
+            subtitle="Medicine, Equipment, Supply" color="var(--info)">
+        </app-stat-card>
+
+    </div>
+
+    <div class="list-table">
+
+        <div class="table-header">
+            <div>
+                <h2>Inventory</h2>
+                <span>{{ items.length }} Items</span>
+            </div>
+
+            <button class="add-btn" type="button" (click)="openAddItemDialog()">
+                + Add Item
+            </button>
+        </div>
+
+        <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef>Category</th>
+                <td mat-cell *matCellDef="let item">{{ item.category }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef>Quantity</th>
+                <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="unit">
+                <th mat-header-cell *matHeaderCellDef>Unit</th>
+                <td mat-cell *matCellDef="let item">{{ item.unit }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="reorder_level">
+                <th mat-header-cell *matHeaderCellDef>Reorder Level</th>
+                <td mat-cell *matCellDef="let item">{{ item.reorder_level }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="stock_status">
+                <th mat-header-cell *matHeaderCellDef>Stock Status</th>
+                <td mat-cell *matCellDef="let item">
+                    <span class="badge" [ngClass]="item.quantity < item.reorder_level ? 'badge-danger' : 'badge-success'">{{ item.quantity < item.reorder_level ? 'Low Stock' : 'In Stock' }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="supplier">
+                <th mat-header-cell *matHeaderCellDef>Supplier</th>
+                <td mat-cell *matCellDef="let item">{{ item.supplier }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let item">
+                    <button type="button" class="submit-button" (click)="openRestockDialog(item)">
+                        Restock
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+
+    </div>
+</div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { PatientService } from '../../services/patient';
 import { Patient } from '../../models/patient.model';
@@ -11,7 +11,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AddPatientDialog } from '../../components/add-patient-dialog/add-patient-dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogRef } from '@angular/cdk/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { PatientDetails } from '../../components/patient-details/patient-details';
 
 @Component({
   selector: 'app-patients',
@@ -19,11 +20,12 @@ import { DialogRef } from '@angular/cdk/dialog';
   imports: [
     CommonModule,
     StatCard,
-    MatTableModule, 
-    MatSortModule, 
+    MatTableModule,
+    MatSortModule,
     MatPaginatorModule,
-    AddPatientDialog
-    
+    AddPatientDialog,
+    MatIconModule
+
   ],
   templateUrl: './patients.html',
   styleUrl: './patients.scss'
@@ -34,9 +36,10 @@ export class PatientsComponent implements OnInit {
   patientsCount = 0;
 
   constructor(
-    private patientService: PatientService, 
+    private patientService: PatientService,
     private pageHeader: PageHeaderService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {
     this.pageHeader.setHeader('Patients', 'Operational Patients Overview')
 
@@ -46,24 +49,24 @@ export class PatientsComponent implements OnInit {
     'id',
     'name',
     'department',
-    'ward',
-    'bed',
+    'location',
     'status',
-    'priority'
-  ]
+    'priority',
+    'ai'
+  ];
 
   dataSource = new MatTableDataSource<Patient>();
-  
+
   ngOnInit(): void {
     this.loadPatients();
   }
 
   openAddPatientDialog(): void {
-    console.log("Add Patient button clicked")
     const dialogRef = this.dialog.open(AddPatientDialog, {
-      width: '600px',
-      maxWidth: '90vw',
-      panelClass: "pulseops-dialog"
+      width: '700px',
+      maxWidth: '95vw',
+      panelClass: "pulseops-patient-dialog",
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe((patient) => {
@@ -78,10 +81,24 @@ export class PatientsComponent implements OnInit {
       next: (patients) => {
         this.patients = patients;
         this.patientsCount = patients.length;
-        this.dataSource.data = patients
+        this.dataSource.data = patients;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Failed to load patients', error)
+      }
+    });
+  }
+
+
+  openPatientAI(patientId: string): void {
+    this.dialog.open(PatientDetails, {
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '92vh',
+      panelClass: 'patient-ai-dialog-panel',
+      data: {
+        patientId: patientId
       }
     });
   }

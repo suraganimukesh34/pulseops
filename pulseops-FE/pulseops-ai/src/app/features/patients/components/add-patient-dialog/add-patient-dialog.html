@@ -1,126 +1,509 @@
-<h2 mat-dialog-title>Add New Patient</h2>
+<div class="patient-dialog">
 
-<mat-dialog-content>
-    <form class="patient-form" [formGroup]="patientForm">
+    <!-- Header -->
+    <header class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </div>
 
-        <!-- Patient Name -->
-        <mat-form-field appearance="outline">
-            <mat-label>Patient Name</mat-label>
-            <input matInput placeholder="Enter patient name" formControlName="name"/>
+            <div>
+                <h2>Add New Patient</h2>
+                <p>Create a new patient record for PulseOps</p>
+            </div>
+        </div>
 
-            @if (
-                patientForm.controls.name.touched && 
-                patientForm.controls.name.hasError('required')
-            ) {
-                <mat-error>
-                    Patient name is required
-                </mat-error>
-            }
-        </mat-form-field>
+        <button type="button" class="close-button" aria-label="Close dialog" (click)="cancel()"
+            [disabled]="isSubmitting">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+            </svg>
+        </button>
+    </header>
 
-        <!-- Department -->
-        <mat-form-field appearance="outline">
-            <mat-label>Department</mat-label>
-            <input matInput placeholder="Enter department" formControlName="department" />
 
-            @if (
-                patientForm.controls.department.touched && 
-                patientForm.controls.department.hasError('required')
-            ) {
-                <mat-error>
-                    Department is required
-                </mat-error>
-            }
-        </mat-form-field>
+    <!-- Form -->
+    <form class="dialog-form" [formGroup]="patientForm" (ngSubmit)="submit()" novalidate>
 
-        <!-- Ward -->
-        <mat-form-field appearance="outline">
-            <mat-label>Ward</mat-label>
-            <input matInput placeholder="Enter ward" formControlName="ward"/>
+        <!-- ==================== -->
+        <!-- Patient Information -->
+        <!-- ==================== -->
 
-            
-            @if (
-                patientForm.controls.ward.touched && 
-                patientForm.controls.ward.hasError('required')
-            ) {
-                <mat-error>
-                    Ward is required
-                </mat-error>
-            }
-        </mat-form-field>
+        <section class="form-section">
 
-        <!-- Bed -->
-        <mat-form-field appearance="outline">
-            <mat-label>Bed</mat-label>
-            <input matInput placeholder="Enter bed number" formControlName="bed"/>
+            <div class="section-heading">
+                <div class="section-indicator"></div>
 
-            
-            @if (
-                patientForm.controls.bed.touched && 
-                patientForm.controls.bed.hasError('required')
-            ) {
-                <mat-error>
-                   Bed is required
-                </mat-error>
-            }
-        </mat-form-field>
+                <div>
+                    <h3>Patient Information</h3>
+                    <p>Basic information about the patient</p>
+                </div>
+            </div>
 
-        <!-- Status -->
-        <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
 
-            <mat-select formControlName="status">
-                <mat-option value="Critical">Critical</mat-option>
-                <mat-option value="Waiting">Waiting</mat-option>
-                <mat-option value="Stable">Stable</mat-option>
-            </mat-select>
+            <div class="form-grid">
 
-            
-            @if (
-                patientForm.controls.status.touched && 
-                patientForm.controls.status.hasError('required')
-            ) {
-                <mat-error>
-                    Status is required
-                </mat-error>
-            }
-        </mat-form-field>
+                <!-- Name -->
+                <div class="field field-full">
+                    <label for="name">
+                        Name
+                        <span class="required">*</span>
+                    </label>
 
-        <!-- Priority -->
-        <mat-form-field appearance="outline">
-            <mat-label>Priority</mat-label>
+                    <input id="name" type="text" formControlName="name" placeholder="Enter patient name"
+                        autocomplete="off" [class.invalid]="name.invalid && name.touched" />
 
-            <mat-select formControlName="priority">
-                <mat-option value="High">High</mat-option>
-                <mat-option value="Medium">Medium</mat-option>
-                <mat-option value="Low">Low</mat-option>
-            </mat-select>
+                    @if (name.invalid && name.touched) {
+                    <div class="error-message">
+                        @if (name.hasError('required')) {
+                        <span>Patient name is required.</span>
+                        }
 
-            
-            @if (
-                patientForm.controls.priority.touched && 
-                patientForm.controls.priority.hasError('required')
-            ) {
-                <mat-error>
-                    Priority is required
-                </mat-error>
-            }
-        </mat-form-field>
+                        @if (name.hasError('minlength')) {
+                        <span>Name must be at least 2 characters.</span>
+                        }
+
+                        @if (name.hasError('maxlength')) {
+                        <span>Name cannot exceed 100 characters.</span>
+                        }
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Age -->
+                <div class="field">
+                    <label for="age">
+                        Age
+                        <span class="required">*</span>
+                    </label>
+
+                    <input id="age" type="number" formControlName="age" placeholder="Enter age" min="1" max="120"
+                        [class.invalid]="age.invalid && age.touched" />
+
+                    @if (age.invalid && age.touched) {
+                    <div class="error-message">
+                        @if (age.hasError('required')) {
+                        <span>Age is required.</span>
+                        }
+
+                        @if (age.hasError('min')) {
+                        <span>Age must be at least 1.</span>
+                        }
+
+                        @if (age.hasError('max')) {
+                        <span>Age cannot exceed 120.</span>
+                        }
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Gender -->
+                <div class="field">
+                    <label for="gender">
+                        Gender
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="select-wrapper">
+                        <select id="gender" formControlName="gender" [class.invalid]="gender.invalid && gender.touched">
+                            <option value="" disabled>
+                                Select gender
+                            </option>
+
+                            @for (option of genderOptions; track option) {
+                            <option [value]="option">
+                                {{ option }}
+                            </option>
+                            }
+                        </select>
+
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    @if (gender.invalid && gender.touched) {
+                    <div class="error-message">
+                        Gender is required.
+                    </div>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==================== -->
+        <!-- Hospital Assignment -->
+        <!-- ==================== -->
+
+        <section class="form-section">
+
+            <div class="section-heading">
+                <div class="section-indicator"></div>
+
+                <div>
+                    <h3>Hospital Assignment</h3>
+                    <p>Assign the patient to the appropriate location</p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- Department -->
+                <div class="field">
+                    <label for="department">
+                        Department
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="select-wrapper">
+                        <select id="department" formControlName="department"
+                            [class.invalid]="department.invalid && department.touched">
+                            <option value="" disabled>
+                                Select department
+                            </option>
+
+                            @for (option of departmentOptions; track option) {
+                            <option [value]="option">
+                                {{ option }}
+                            </option>
+                            }
+                        </select>
+
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    @if (department.invalid && department.touched) {
+                    <div class="error-message">
+                        Department is required.
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Ward -->
+                <div class="field">
+                    <label for="ward">
+                        Ward
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="select-wrapper">
+                        <select id="ward" formControlName="ward" [class.invalid]="ward.invalid && ward.touched">
+                            <option value="" disabled>
+                                Select ward
+                            </option>
+
+                            @for (option of wardOptions; track option) {
+                            <option [value]="option">
+                                {{ option }}
+                            </option>
+                            }
+                        </select>
+
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    @if (ward.invalid && ward.touched) {
+                    <div class="error-message">
+                        Ward is required.
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Bed -->
+                <div class="field">
+                    <label for="bed">
+                        Bed
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="select-wrapper">
+                        <select id="bed" formControlName="bed" [class.invalid]="bed.invalid && bed.touched">
+                            <option value="" disabled>
+                                Select bed
+                            </option>
+
+                            @for (option of bedOptions; track option) {
+                            <option [value]="option">
+                                {{ option }}
+                            </option>
+                            }
+                        </select>
+
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    @if (bed.invalid && bed.touched) {
+                    <div class="error-message">
+                        Bed is required.
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Status -->
+                <div class="field">
+                    <label for="status">
+                        Status
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="select-wrapper">
+                        <select id="status" formControlName="status" [class.invalid]="status.invalid && status.touched">
+                            <option value="" disabled>
+                                Select status
+                            </option>
+
+                            @for (option of statusOptions; track option) {
+                            <option [value]="option">
+                                {{ option }}
+                            </option>
+                            }
+                        </select>
+
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    @if (status.invalid && status.touched) {
+                    <div class="error-message">
+                        Status is required.
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Priority -->
+                <div class="field field-full">
+                    <label for="priority">
+                        Priority
+                        <span class="required">*</span>
+                    </label>
+
+                    <div class="select-wrapper">
+                        <select id="priority" formControlName="priority"
+                            [class.invalid]="priority.invalid && priority.touched">
+                            <option value="" disabled>
+                                Select priority
+                            </option>
+
+                            @for (option of priorityOptions; track option) {
+                            <option [value]="option">
+                                {{ option }}
+                            </option>
+                            }
+                        </select>
+
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+
+                    @if (priority.invalid && priority.touched) {
+                    <div class="error-message">
+                        Priority is required.
+                    </div>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==================== -->
+        <!-- Admission Details -->
+        <!-- ==================== -->
+
+        <section class="form-section">
+
+            <div class="section-heading">
+                <div class="section-indicator"></div>
+
+                <div>
+                    <h3>Admission Details</h3>
+                    <p>Optional admission and care information</p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- Admission Date -->
+                <div class="field">
+                    <label for="admissionDate">
+                        Admission Date
+                    </label>
+
+                    <input id="admissionDate" type="date" formControlName="admission_date" />
+                </div>
+
+
+                <!-- Expected Discharge -->
+                <div class="field">
+                    <label for="expectedDischargeDate">
+                        Expected Discharge Date
+                    </label>
+
+                    <input id="expectedDischargeDate" type="date" formControlName="expected_discharge_date" />
+                </div>
+
+
+                <!-- Attending Doctor -->
+                <div class="field field-full">
+                    <label for="attendingDoctor">
+                        Attending Doctor
+                    </label>
+
+                    <input id="attendingDoctor" type="text" formControlName="attending_doctor"
+                        placeholder="Enter attending doctor's name" autocomplete="off" [class.invalid]="
+attendingDoctor.invalid &&
+attendingDoctor.touched
+" />
+
+                    @if (
+                    attendingDoctor.invalid &&
+                    attendingDoctor.touched &&
+                    attendingDoctor.hasError('maxlength')
+                    ) {
+                    <div class="error-message">
+                        Attending doctor's name cannot exceed 100 characters.
+                    </div>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ==================== -->
+        <!-- Clinical Information -->
+        <!-- ==================== -->
+
+        <section class="form-section">
+
+            <div class="section-heading">
+                <div class="section-indicator"></div>
+
+                <div>
+                    <h3>Clinical Information</h3>
+                    <p>Optional clinical information for the patient</p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- Diagnosis -->
+                <div class="field field-full">
+                    <label for="diagnosis">
+                        Diagnosis
+                    </label>
+
+                    <textarea id="diagnosis" formControlName="diagnosis" placeholder="Enter diagnosis" rows="3"
+                        [class.invalid]="
+diagnosis.invalid &&
+diagnosis.touched
+"></textarea>
+
+                    @if (
+                    diagnosis.invalid &&
+                    diagnosis.touched &&
+                    diagnosis.hasError('maxlength')
+                    ) {
+                    <div class="error-message">
+                        Diagnosis cannot exceed 500 characters.
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Symptoms -->
+                <div class="field field-full">
+                    <label for="symptoms">
+                        Symptoms
+                    </label>
+
+                    <textarea id="symptoms" formControlName="symptoms" placeholder="Describe the patient's symptoms"
+                        rows="3" [class.invalid]="
+symptoms.invalid &&
+symptoms.touched
+"></textarea>
+
+                    @if (
+                    symptoms.invalid &&
+                    symptoms.touched &&
+                    symptoms.hasError('maxlength')
+                    ) {
+                    <div class="error-message">
+                        Symptoms cannot exceed 1000 characters.
+                    </div>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- API Error -->
+        @if (submitError) {
+        <div class="submit-error" role="alert">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 9v4M12 17h.01M10.3 3.8 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+            <span>{{ submitError }}</span>
+        </div>
+        }
+
+
+        <!-- Footer -->
+        <footer class="dialog-footer">
+
+            <button type="button" class="cancel-button" (click)="cancel()" [disabled]="isSubmitting">
+                Cancel
+            </button>
+
+            <button type="submit" class="submit-button" [disabled]="patientForm.invalid || isSubmitting">
+                @if (isSubmitting) {
+                <span class="button-spinner"></span>
+                <span>Adding Patient...</span>
+                } @else {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+
+                <span>Add Patient</span>
+                }
+            </button>
+
+        </footer>
 
     </form>
-</mat-dialog-content>
 
-<mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close class="cancel-btn">
-        Cancel
-    </button>
-
-    <button 
-        mat-flat-button 
-        class="add-btn"
-        (click)="addPatient()"
-        [disabled]="patientForm.invalid"
-    >
-        Add Patient
-    </button>
-</mat-dialog-actions>
+</div>

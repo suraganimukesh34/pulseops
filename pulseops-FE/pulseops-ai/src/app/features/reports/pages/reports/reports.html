@@ -1,0 +1,64 @@
+<div class="list-page">
+
+    <div class="report-card">
+        <div class="table-header">
+            <div>
+                <h2>Department Load</h2>
+                <span>Bed occupancy by department</span>
+            </div>
+        </div>
+
+        <div class="load-row" *ngFor="let dept of departmentLoad">
+            <div class="load-label">
+                <span>{{ dept.department_name }}</span>
+                <strong>{{ dept.load_percentage }}%</strong>
+            </div>
+            <div class="progress">
+                <div class="progress-value" [style.width.%]="dept.load_percentage"></div>
+            </div>
+            <div class="load-meta">
+                {{ dept.occupied_beds }} / {{ dept.bed_capacity }} beds occupied · {{ dept.patient_count }} patients
+            </div>
+        </div>
+    </div>
+
+    <div class="report-grid">
+
+        <div class="report-card">
+            <div class="table-header">
+                <div>
+                    <h2>Billing Breakdown</h2>
+                    <span>Invoice totals by status</span>
+                </div>
+            </div>
+
+            <div class="billing-row" *ngFor="let row of billingBreakdown">
+                <span class="badge" [ngClass]="{
+                    'badge-success': row.status === 'Paid',
+                    'badge-warning': row.status === 'Pending',
+                    'badge-danger': row.status === 'Overdue'
+                }">{{ row.status }}</span>
+                <span class="billing-count">{{ row.count }} invoices</span>
+                <strong class="billing-total">${{ row.total.toFixed(2) }}</strong>
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="table-header">
+                <div>
+                    <h2>Low Stock Items</h2>
+                    <span>{{ lowStockItems.length }} items below reorder level</span>
+                </div>
+            </div>
+
+            <div class="stock-row" *ngFor="let item of lowStockItems">
+                <span>{{ item.name }}</span>
+                <span class="badge badge-danger">{{ item.quantity }} / {{ item.reorder_level }} {{ item.unit }}</span>
+            </div>
+
+            <p class="empty-note" *ngIf="lowStockItems.length === 0">All inventory items are above reorder level.</p>
+        </div>
+
+    </div>
+
+</div>

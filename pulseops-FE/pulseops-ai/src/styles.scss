@@ -32,7 +32,7 @@ body {
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
   background: #f5f7fb;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 
   // Reset the user agent margin.
   margin: 0;
@@ -43,81 +43,699 @@ body {
   box-sizing: border-box;
 }
 :root {
-
-/* ==========================================
+  /* ==========================================
 PulseOps AI Design Tokens
 ========================================== */
 
-/* Backgrounds */
---page-bg: #0f172a;
---sidebar-bg: #111827;
---navbar-bg: #1e293b;
---card-bg: #1e293b;
+  /* Backgrounds */
+  --page-bg: #0f172a;
+  --sidebar-bg: #111827;
+  --navbar-bg: #1e293b;
+  --card-bg: #1e293b;
 
-/* Text */
---text-primary: #ffffff;
---text-secondary: #cbd5e1;
---text-muted: #94a3b8;
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
 
-/* Brand */
---primary: #3b82f6;
+  /* Brand */
+  --primary: #3b82f6;
 
-/* Status */
---success: #22c55e;
---warning: #f59e0b;
---danger: #ef4444;
---info: #3b82f6;
+  /* Status */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
 
-/* Borders */
---border: rgba(255, 255, 255, 0.08);
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
 
-/* Hover */
---hover: rgba(255, 255, 255, 0.08);
-
+  /* Hover */
+  --hover: rgba(255, 255, 255, 0.08);
 }
-
 
 *,
 *::before,
-*::after{
-box-sizing:border-box;
+*::after {
+  box-sizing: border-box;
 }
 
 html,
-body{
-height:100%;
-margin:0;
-padding:0;
-background:var(--background);
-font-family:Roboto,"Helvetica Neue",sans-serif;
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-body{
-overflow:hidden;
+body {
+  overflow: hidden;
 }
 
-a{
-text-decoration:none;
-color:inherit;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-button{
-font-family:inherit;
+button {
+  font-family: inherit;
 }
 
-mat-card{
-border-radius:var(--radius);
+mat-card {
+  border-radius: var(--radius);
 }
 
-.pulseops-dialog {
+.pulseops-patient-dialog {
+  --mdc-dialog-container-color: transparent;
   --mdc-dialog-container-shape: 16px;
 }
 
-.pulseops-dialog .mat-mdc-dialog-conatiner {
-  border-radius: 16px;
+.pulseops-patient-dialog .mat-mdc-dialog-container {
+  padding: 0;
 }
 
+.pulseops-patient-dialog .mdc-dialog__surface {
+  padding: 0 !important;
 
+  border: 1px solid rgba(96, 165, 250, 0.16) !important;
+  border-radius: 16px !important;
 
+  background: #0b192a !important;
 
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(37, 99, 235, 0.04) !important;
 
+  overflow: hidden !important;
+}
+
+/* ==========================================================
+   Shared form-dialog chrome — reused by every Add/Edit dialog
+   (departments, staff, appointments, beds, alerts, billing,
+   inventory, settings...) so each one only has to define its
+   own form fields, not the whole dialog shell.
+   ========================================================== */
+
+.pulseops-form-dialog {
+  --mdc-dialog-container-color: transparent;
+  --mdc-dialog-container-shape: 16px;
+}
+
+.pulseops-form-dialog .mat-mdc-dialog-container {
+  padding: 0;
+}
+
+.pulseops-form-dialog .mdc-dialog__surface {
+  padding: 0 !important;
+  border: 1px solid rgba(96, 165, 250, 0.16) !important;
+  border-radius: 16px !important;
+  background: #0b192a !important;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(37, 99, 235, 0.04) !important;
+  overflow: hidden !important;
+}
+
+.form-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  max-height: 90vh;
+  background: #0b192a;
+  color: #e5edf8;
+}
+
+.form-dialog .dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 28px 20px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(11, 25, 42, 0.96) 55%);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.form-dialog .header-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.form-dialog .header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.08);
+}
+
+.form-dialog .header-icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.form-dialog .dialog-header h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: #f8fafc;
+}
+
+.form-dialog .dialog-header p {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+.form-dialog .close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.form-dialog .close-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.form-dialog .close-button:hover:not(:disabled) {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.14);
+  color: #f8fafc;
+}
+
+.form-dialog .close-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.form-dialog .dialog-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px 28px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(96, 165, 250, 0.35) transparent;
+}
+
+.form-dialog .dialog-form::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-dialog .dialog-form::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.form-dialog .dialog-form::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(96, 165, 250, 0.3);
+}
+
+.form-dialog .dialog-form::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 165, 250, 0.5);
+}
+
+.form-dialog .form-section {
+  padding: 0 0 26px;
+}
+
+.form-dialog .form-section + .form-section {
+  padding-top: 24px;
+  border-top: 1px solid rgba(148, 163, 184, 0.09);
+}
+
+.form-dialog .section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-bottom: 17px;
+}
+
+.form-dialog .section-indicator {
+  width: 3px;
+  min-height: 31px;
+  flex: 0 0 3px;
+  margin-top: 2px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, #60a5fa, #2563eb);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.25);
+}
+
+.form-dialog .section-heading h3 {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 650;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: #dbeafe;
+}
+
+.form-dialog .section-heading p {
+  margin: 3px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.form-dialog .form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 17px 16px;
+}
+
+.form-dialog .field {
+  min-width: 0;
+}
+
+.form-dialog .field-full {
+  grid-column: 1 / -1;
+}
+
+.form-dialog .field label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 550;
+  color: #cbd5e1;
+}
+
+.form-dialog .required {
+  margin-left: 3px;
+  color: #60a5fa;
+}
+
+.form-dialog .field input,
+.form-dialog .field textarea,
+.form-dialog .field select {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgba(100, 116, 139, 0.28);
+  border-radius: 9px;
+  outline: none;
+  background: rgba(15, 31, 50, 0.78);
+  color: #e5edf8;
+  font-family: inherit;
+  font-size: 13px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.form-dialog .field input,
+.form-dialog .field select {
+  height: 42px;
+  padding: 0 12px;
+}
+
+.form-dialog .field textarea {
+  min-height: 82px;
+  padding: 11px 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.form-dialog .field input::placeholder,
+.form-dialog .field textarea::placeholder {
+  color: #52647a;
+  opacity: 1;
+}
+
+.form-dialog .field input:hover:not(:disabled),
+.form-dialog .field textarea:hover:not(:disabled),
+.form-dialog .field select:hover:not(:disabled) {
+  border-color: rgba(96, 165, 250, 0.32);
+  background: rgba(15, 31, 50, 0.92);
+}
+
+.form-dialog .field input:focus,
+.form-dialog .field textarea:focus,
+.form-dialog .field select:focus {
+  border-color: #3b82f6;
+  background: rgba(15, 31, 50, 0.98);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 0 18px rgba(37, 99, 235, 0.06);
+}
+
+.form-dialog .field input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.form-dialog .field input[type='date'] {
+  color-scheme: dark;
+}
+
+.form-dialog .select-wrapper {
+  position: relative;
+}
+
+.form-dialog .field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 38px;
+  cursor: pointer;
+}
+
+.form-dialog .field select option {
+  background: #0f2034;
+  color: #e5edf8;
+}
+
+.form-dialog .select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+  transition: color 160ms ease;
+}
+
+.form-dialog .select-wrapper:focus-within .select-arrow {
+  color: #60a5fa;
+}
+
+.form-dialog .field input.invalid,
+.form-dialog .field textarea.invalid,
+.form-dialog .field select.invalid {
+  border-color: rgba(248, 113, 113, 0.75);
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.06);
+}
+
+.form-dialog .error-message {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #f87171;
+}
+
+.form-dialog .error-message::before {
+  content: '!';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  margin-right: 5px;
+  margin-top: 1px;
+  flex: 0 0 13px;
+  border: 1px solid rgba(248, 113, 113, 0.55);
+  border-radius: 50%;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.form-dialog .submit-error {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 20px;
+  padding: 11px 13px;
+  border: 1px solid rgba(248, 113, 113, 0.22);
+  border-radius: 9px;
+  background: rgba(127, 29, 29, 0.13);
+  color: #fca5a5;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.form-dialog .submit-error svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+}
+
+.form-dialog .dialog-footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 0 -28px;
+  padding: 17px 28px;
+  border-top: 1px solid rgba(148, 163, 184, 0.11);
+  background: linear-gradient(to bottom, rgba(11, 25, 42, 0.94), #0b192a 28%);
+  backdrop-filter: blur(12px);
+}
+
+.form-dialog .cancel-button {
+  height: 39px;
+  padding: 0 17px;
+  border: 1px solid rgba(100, 116, 139, 0.25);
+  border-radius: 8px;
+  background: rgba(30, 45, 64, 0.5);
+  color: #aebdce;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.form-dialog .cancel-button:hover:not(:disabled) {
+  border-color: rgba(148, 163, 184, 0.35);
+  background: rgba(51, 65, 85, 0.55);
+  color: #f1f5f9;
+}
+
+.form-dialog .cancel-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.form-dialog .submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 122px;
+  height: 39px;
+  padding: 0 17px;
+  border: 1px solid rgba(96, 165, 250, 0.55);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 5px 18px rgba(37, 99, 235, 0.18);
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, opacity 160ms ease;
+}
+
+.form-dialog .submit-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.form-dialog .submit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #60a5fa, #2563eb);
+  box-shadow: 0 7px 22px rgba(37, 99, 235, 0.28);
+}
+
+.form-dialog .submit-button:disabled {
+  border-color: rgba(100, 116, 139, 0.18);
+  background: rgba(51, 65, 85, 0.55);
+  color: #64748b;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.form-dialog .button-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: pulseops-spin 700ms linear infinite;
+}
+
+@keyframes pulseops-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================
+   Shared status/priority badge — generic pill used across list
+   pages (beds, staff, appointments, alerts, billing, inventory)
+   ========================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-success {
+  background: rgba(76, 175, 80, 0.15);
+  color: #72d572;
+}
+
+.badge-warning {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ffb74d;
+}
+
+.badge-danger {
+  background: rgba(244, 67, 54, 0.15);
+  color: #ff6b6b;
+}
+
+.badge-info {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.badge-neutral {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+}
+
+/* ==========================================================
+   Shared list-page chrome — reused by every list page
+   (departments, staff, appointments, beds, alerts, billing,
+   inventory, patients) so table/card styling stays consistent
+   without every page re-declaring it.
+   ========================================================== */
+
+.list-page {
+  margin: 24px;
+}
+
+.list-page .summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+
+.list-page .list-table {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.list-page .table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.list-page .table-header h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 22px;
+}
+
+.list-page .table-header span {
+  color: var(--text-secondary);
+}
+
+.list-page .add-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--info);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.list-page .add-btn:hover {
+  opacity: 0.9;
+}
+
+.list-page table {
+  width: 100%;
+  background: transparent;
+  border-collapse: collapse;
+}
+
+.list-page .mat-mdc-header-row {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.list-page .mat-mdc-header-cell {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.list-page .mat-mdc-cell {
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.list-page .mat-mdc-row:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+@media (max-width: 1200px) {
+  .list-page .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .list-page .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .form-dialog .dialog-header {
+    padding: 19px 20px 17px;
+  }
+  .form-dialog .dialog-form {
+    padding: 20px 20px 0;
+  }
+  .form-dialog .form-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .form-dialog .field-full {
+    grid-column: auto;
+  }
+  .form-dialog .dialog-footer {
+    margin: 0 -20px;
+    padding: 15px 20px;
+  }
+}

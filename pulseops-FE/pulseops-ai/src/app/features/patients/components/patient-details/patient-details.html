@@ -1,1 +1,416 @@
-<p>patient-details works!</p>
+<div class="patient-details-dialog">
+
+    <!-- Header -->
+    <div class="dialog-header">
+        <div class="header-left">
+
+            <div class="header-icon">
+                ✦
+            </div>
+
+            <div>
+                <h2>Patient AI Insights</h2>
+                <p>Patient information overview</p>
+            </div>
+
+        </div>
+
+        <button type="button" class="close-button" (click)="close()" aria-label="Close">
+            ×
+        </button>
+    </div>
+
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+
+        <div class="spinner"></div>
+
+        <h3>Loading patient details</h3>
+
+        <p>
+            Retrieving patient information...
+        </p>
+
+    </div>
+
+
+    <!-- Error State -->
+    <div class="error-state" *ngIf="!isLoading && hasError">
+
+        <div class="error-icon">
+            !
+        </div>
+
+        <h3>Unable to load patient</h3>
+
+        <p>
+            We couldn't retrieve the patient details.
+        </p>
+
+        <button type="button" class="secondary-button" (click)="close()">
+            Close
+        </button>
+
+    </div>
+
+
+    <!-- Patient Content -->
+    <ng-container *ngIf="!isLoading && !hasError && patient as p">
+
+        <!-- Patient Banner -->
+        <div class="patient-banner">
+
+            <div class="patient-avatar">
+                {{ p.name.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="patient-identity">
+
+                <div class="name-row">
+
+                    <h3>
+                        {{ p.name }}
+                    </h3>
+
+                    <span class="status-badge" [ngClass]="p.status.toLowerCase()">
+
+                        {{ p.status }}
+
+                    </span>
+
+                </div>
+
+                <div class="patient-meta">
+
+                    <span>
+                        {{ p.id }}
+                    </span>
+
+                    <span class="dot">
+                        •
+                    </span>
+
+                    <span>
+                        {{ p.department }}
+                    </span>
+
+                    <span class="dot">
+                        •
+                    </span>
+
+                    <span>
+                        {{ p.ward }} / {{ p.bed }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Priority -->
+            <div class="priority">
+
+                <span>
+                    Priority
+                </span>
+
+                <strong [ngClass]="p.priority.toLowerCase()">
+
+                    {{ p.priority }}
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- Scrollable Content -->
+        <div class="dialog-content">
+
+
+            <!-- Patient Overview -->
+            <section class="information-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        ◈
+                    </div>
+
+                    <div>
+                        <h4>
+                            Patient Overview
+                        </h4>
+
+                        <p>
+                            Basic patient and location information
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="information-grid">
+
+                    <div class="information-item">
+                        <span>Age</span>
+                        <strong>{{ p.age }}</strong>
+                    </div>
+
+                    <div class="information-item">
+                        <span>Gender</span>
+                        <strong>{{ p.gender }}</strong>
+                    </div>
+
+                    <div class="information-item">
+                        <span>Department</span>
+                        <strong>{{ p.department }}</strong>
+                    </div>
+
+                    <div class="information-item">
+                        <span>Ward</span>
+                        <strong>{{ p.ward }}</strong>
+                    </div>
+
+                    <div class="information-item">
+                        <span>Bed</span>
+                        <strong>{{ p.bed }}</strong>
+                    </div>
+
+                    <div class="information-item">
+                        <span>Status</span>
+                        <strong>{{ p.status }}</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Admission Details -->
+            <section class="information-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        ◷
+                    </div>
+
+                    <div>
+                        <h4>
+                            Admission Details
+                        </h4>
+
+                        <p>
+                            Current admission information
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="information-grid">
+
+                    <div class="information-item">
+
+                        <span>
+                            Admission Date
+                        </span>
+
+                        <strong>
+                            {{ p.admission_date || '—' }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="information-item">
+
+                        <span>
+                            Expected Discharge
+                        </span>
+
+                        <strong>
+                            {{ p.expected_discharge_date || '—' }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="information-item full-width">
+
+                        <span>
+                            Attending Doctor
+                        </span>
+
+                        <strong>
+                            {{ p.attending_doctor || '—' }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Clinical Information -->
+            <section class="information-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        ✚
+                    </div>
+
+                    <div>
+                        <h4>
+                            Clinical Information
+                        </h4>
+
+                        <p>
+                            Diagnosis and reported symptoms
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="clinical-grid">
+
+                    <div class="clinical-item">
+
+                        <span>
+                            Diagnosis
+                        </span>
+
+                        <div class="clinical-value">
+                            {{ p.diagnosis || '—' }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="clinical-item">
+
+                        <span>
+                            Symptoms
+                        </span>
+
+                        <div class="clinical-value">
+                            {{ p.symptoms || '—' }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- AI SUMMARY -->
+            <section class="ai-summary-section">
+
+                <div class="section-heading">
+                    <div class="section-icon ai-section-icon">
+                        <mat-icon>auto_awesome</mat-icon>
+                    </div>
+
+                    <div class="section-heading-text">
+                        <h4>AI-Generated Summary</h4>
+                        <p>
+                            AI summary based on the patient's available information
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div class="ai-summary-loading" *ngIf="isSummaryLoading">
+
+                    <div class="ai-loading-icon">
+                        <mat-icon>auto_awesome</mat-icon>
+                    </div>
+
+                    <div class="ai-loading-content">
+                        <strong>Generating AI summary</strong>
+                        <span>
+                            Analyzing available patient information...
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- Summary -->
+                <div class="ai-summary-card" *ngIf="!isSummaryLoading && aiSummary">
+
+                    <div class="ai-summary-header">
+                        <div class="ai-summary-label">
+                            <span class="ai-status-dot"></span>
+                            AI INSIGHT
+                        </div>
+
+                        <mat-icon class="ai-summary-icon">
+                            auto_awesome
+                        </mat-icon>
+                    </div>
+
+                    <p class="ai-summary-text">
+                        {{ aiSummary }}
+                    </p>
+
+                </div>
+
+                <!-- Error -->
+                <div class="ai-summary-error" *ngIf="!isSummaryLoading && summaryError">
+
+                    <mat-icon>error_outline</mat-icon>
+
+                    <div>
+                        <strong>Unable to generate summary</strong>
+                        <span>
+                            Please try again.
+                        </span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+
+        </div>
+
+
+        <!-- Footer -->
+        <div class="dialog-footer">
+
+            <button type="button" class="secondary-button" (click)="close()">
+
+                Close
+
+            </button>
+
+
+            <button type="button" class="ai-button" (click)="generateSummary()" [disabled]="isSummaryLoading">
+
+                <span *ngIf="!isSummaryLoading && !aiSummary">
+                    ✦ Generate AI Summary
+                </span>
+
+                <span *ngIf="!isSummaryLoading && aiSummary">
+                    ↻ Regenerate AI Summary
+                </span>
+
+                <span *ngIf="isSummaryLoading">
+                    Generating Summary...
+                </span>
+
+            </button>
+
+        </div>
+
+    </ng-container>
+
+</div>

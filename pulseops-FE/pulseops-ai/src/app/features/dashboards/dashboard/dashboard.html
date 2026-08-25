@@ -6,14 +6,14 @@
     </div>
 
     <div class="widgets-grid">
-        <app-hospital-status></app-hospital-status>
-        <app-bed-occupancy></app-bed-occupancy>
-        <app-active-alerts></app-active-alerts>
-        <app-department-load></app-department-load>
-        
+        <app-hospital-status [summary]="summary"></app-hospital-status>
+        <app-bed-occupancy [summary]="summary"></app-bed-occupancy>
+        <app-active-alerts [alerts]="recentAlerts"></app-active-alerts>
+        <app-department-load [departmentLoad]="summary?.department_load ?? []"></app-department-load>
+
     </div>
     <div class="ai-widget">
-        <app-ai-recommendation></app-ai-recommendation>
+        <app-ai-recommendation [statusMessage]="aiStatusMessage" [insights]="aiInsights"></app-ai-recommendation>
     </div>
 
 </div>

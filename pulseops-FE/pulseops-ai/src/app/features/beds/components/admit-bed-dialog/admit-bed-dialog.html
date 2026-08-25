@@ -1,0 +1,92 @@
+<div class="form-dialog">
+
+    <header class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </div>
+            <div>
+                <h2>Admit Patient</h2>
+                <p>Assign a patient to this bed</p>
+            </div>
+        </div>
+
+        <button type="button" class="close-button" aria-label="Close dialog" (click)="cancel()"
+            [disabled]="isSubmitting">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+            </svg>
+        </button>
+    </header>
+
+    <form class="dialog-form" [formGroup]="admitForm" (ngSubmit)="submit()" novalidate>
+
+        <section class="form-section">
+            <div class="section-heading">
+                <div class="section-indicator"></div>
+                <div>
+                    <h3>Admission Details</h3>
+                    <p>Patient and admission date</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field field-full">
+                    <label for="patient_id">Patient ID <span class="required">*</span></label>
+                    <input id="patient_id" type="text" formControlName="patient_id" placeholder="e.g. P1001"
+                        autocomplete="off" [class.invalid]="patient_id.invalid && patient_id.touched" />
+                    @if (patient_id.invalid && patient_id.touched) {
+                    <div class="error-message">Patient ID is required.</div>
+                    }
+                </div>
+
+                <div class="field field-full">
+                    <label for="admitted_date">Admitted Date <span class="required">*</span></label>
+                    <input id="admitted_date" type="date" formControlName="admitted_date"
+                        [class.invalid]="admitted_date.invalid && admitted_date.touched" />
+                    @if (admitted_date.invalid && admitted_date.touched) {
+                    <div class="error-message">Admitted date is required.</div>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+        @if (submitError) {
+        <div class="submit-error" role="alert">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 9v4M12 17h.01M10.3 3.8 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span>{{ submitError }}</span>
+        </div>
+        }
+
+        <footer class="dialog-footer">
+            <button type="button" class="cancel-button" (click)="cancel()" [disabled]="isSubmitting">
+                Cancel
+            </button>
+            <button type="submit" class="submit-button" [disabled]="admitForm.invalid || isSubmitting">
+                @if (isSubmitting) {
+                <span class="button-spinner"></span>
+                <span>Admitting...</span>
+                } @else {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>Admit Patient</span>
+                }
+            </button>
+        </footer>
+
+    </form>
+
+</div>

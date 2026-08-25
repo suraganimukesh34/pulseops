@@ -1,0 +1,33 @@
+<div class="list-page">
+
+    <div class="hero-card">
+        <div class="hero-icon">
+            <mat-icon>smart_toy</mat-icon>
+        </div>
+        <div class="hero-text">
+            <div class="hero-badge">Preview — Coming Soon</div>
+            <h2>PulseOps AI Copilot</h2>
+            <p>{{ statusMessage }}</p>
+        </div>
+    </div>
+
+    <div class="insight-grid">
+        <div class="insight-card" *ngFor="let insight of insights">
+            <div class="insight-header">
+                <mat-icon>auto_awesome</mat-icon>
+                <span class="category-tag">{{ insight.category }}</span>
+            </div>
+            <h3>{{ insight.title }}</h3>
+            <p>{{ insight.description }}</p>
+            <div class="impact-row">
+                <span>Expected Impact</span>
+                <span class="badge" [ngClass]="{
+                    'badge-danger': insight.impact === 'High',
+                    'badge-warning': insight.impact === 'Medium',
+                    'badge-info': insight.impact === 'Low'
+                }">{{ insight.impact }}</span>
+            </div>
+        </div>
+    </div>
+
+</div>

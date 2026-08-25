@@ -1,0 +1,83 @@
+<div class="form-dialog">
+
+    <header class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </div>
+            <div>
+                <h2>Restock — {{ data.itemName }}</h2>
+                <p>Add stock to this inventory item</p>
+            </div>
+        </div>
+
+        <button type="button" class="close-button" aria-label="Close dialog" (click)="cancel()"
+            [disabled]="isSubmitting">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+            </svg>
+        </button>
+    </header>
+
+    <form class="dialog-form" [formGroup]="restockForm" (ngSubmit)="submit()" novalidate>
+
+        <section class="form-section">
+            <div class="section-heading">
+                <div class="section-indicator"></div>
+                <div>
+                    <h3>Restock Quantity</h3>
+                    <p>This amount will be added to the current stock</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field field-full">
+                    <label for="quantity">Quantity to Add <span class="required">*</span></label>
+                    <input id="quantity" type="number" formControlName="quantity" min="1"
+                        [class.invalid]="quantity.invalid && quantity.touched" />
+                    @if (quantity.invalid && quantity.touched) {
+                    <div class="error-message">Enter a valid quantity to add.</div>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+        @if (submitError) {
+        <div class="submit-error" role="alert">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 9v4M12 17h.01M10.3 3.8 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span>{{ submitError }}</span>
+        </div>
+        }
+
+        <footer class="dialog-footer">
+            <button type="button" class="cancel-button" (click)="cancel()" [disabled]="isSubmitting">
+                Cancel
+            </button>
+            <button type="submit" class="submit-button" [disabled]="restockForm.invalid || isSubmitting">
+                @if (isSubmitting) {
+                <span class="button-spinner"></span>
+                <span>Restocking...</span>
+                } @else {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>Restock</span>
+                }
+            </button>
+        </footer>
+
+    </form>
+
+</div>

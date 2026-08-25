@@ -1,12 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardCard } from '../../../../shared/components/dashboard-card/dashboard-card';
-interface Alert {
-  title: string;
-  description: string;
-  severity: 'critical' | 'warning' | 'info';
-}
+import { DashboardAlertPreview } from '../../models/dashboard-summary.model';
 
 @Component({
   selector: 'app-active-alerts',
@@ -21,27 +17,6 @@ interface Alert {
 })
 export class ActiveAlerts {
 
-  alerts: Alert[] = [
-    {
-      title: 'ICU Occupancy High',
-      description: 'ICU occupancy has reached 91%',
-      severity: 'critical'
-    },
-    {
-      title: 'ER Waiting Time',
-      description: 'Average waiting time is 28 minutes',
-      severity: 'warning'
-    },
-    {
-      title: 'Staff Shortage',
-      description: 'ICU requires 2 additional nurses',
-      severity: 'warning'
-    },
-    {
-      title: 'MRI Maintenance',
-      description: 'Scheduled maintenance at 9:00 PM',
-      severity: 'info'
-    }
-  ];
+  @Input() alerts: DashboardAlertPreview[] = [];
 
 }

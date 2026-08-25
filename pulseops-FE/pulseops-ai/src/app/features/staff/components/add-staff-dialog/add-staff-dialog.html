@@ -1,0 +1,182 @@
+<div class="form-dialog">
+
+    <header class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+            </div>
+            <div>
+                <h2>Add Staff</h2>
+                <p>Add a new staff member</p>
+            </div>
+        </div>
+
+        <button type="button" class="close-button" aria-label="Close dialog" (click)="cancel()"
+            [disabled]="isSubmitting">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+            </svg>
+        </button>
+    </header>
+
+    <form class="dialog-form" [formGroup]="staffForm" (ngSubmit)="submit()" novalidate>
+
+        <section class="form-section">
+            <div class="section-heading">
+                <div class="section-indicator"></div>
+                <div>
+                    <h3>Staff Details</h3>
+                    <p>Basic information about the staff member</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="field field-full">
+                    <label for="name">Name <span class="required">*</span></label>
+                    <input id="name" type="text" formControlName="name" placeholder="e.g. Dr. John Doe"
+                        autocomplete="off" [class.invalid]="name.invalid && name.touched" />
+                    @if (name.invalid && name.touched) {
+                    <div class="error-message">Name is required.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="role">Role <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="role" formControlName="role" [class.invalid]="role.invalid && role.touched">
+                            @for (option of roleOptions; track option) {
+                            <option [value]="option">{{ option }}</option>
+                            }
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="department_id">Department <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="department_id" formControlName="department_id"
+                            [class.invalid]="department_id.invalid && department_id.touched">
+                            <option value="" disabled>Select department</option>
+                            @for (dept of departments; track dept.id) {
+                            <option [value]="dept.id">{{ dept.name }}</option>
+                            }
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    @if (department_id.invalid && department_id.touched) {
+                    <div class="error-message">Department is required.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="specialization">Specialization</label>
+                    <input id="specialization" type="text" formControlName="specialization"
+                        placeholder="e.g. Cardiologist" autocomplete="off" />
+                </div>
+
+                <div class="field">
+                    <label for="shift">Shift <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="shift" formControlName="shift" [class.invalid]="shift.invalid && shift.touched">
+                            @for (option of shiftOptions; track option) {
+                            <option [value]="option">{{ option }}</option>
+                            }
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="status">Status <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="status" formControlName="status"
+                            [class.invalid]="status.invalid && status.touched">
+                            @for (option of statusOptions; track option) {
+                            <option [value]="option">{{ option }}</option>
+                            }
+                        </select>
+                        <svg class="select-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input id="email" type="email" formControlName="email" placeholder="e.g. john.doe@hospital.com"
+                        autocomplete="off" [class.invalid]="email.invalid && email.touched" />
+                    @if (email.invalid && email.touched) {
+                    <div class="error-message">A valid email is required.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="phone">Phone <span class="required">*</span></label>
+                    <input id="phone" type="text" formControlName="phone" placeholder="e.g. 555-0100"
+                        autocomplete="off" [class.invalid]="phone.invalid && phone.touched" />
+                    @if (phone.invalid && phone.touched) {
+                    <div class="error-message">Phone is required.</div>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="joined_date">Joined Date <span class="required">*</span></label>
+                    <input id="joined_date" type="date" formControlName="joined_date"
+                        [class.invalid]="joined_date.invalid && joined_date.touched" />
+                    @if (joined_date.invalid && joined_date.touched) {
+                    <div class="error-message">Joined date is required.</div>
+                    }
+                </div>
+
+            </div>
+        </section>
+
+        @if (submitError) {
+        <div class="submit-error" role="alert">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                    d="M12 9v4M12 17h.01M10.3 3.8 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0Z"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span>{{ submitError }}</span>
+        </div>
+        }
+
+        <footer class="dialog-footer">
+            <button type="button" class="cancel-button" (click)="cancel()" [disabled]="isSubmitting">
+                Cancel
+            </button>
+            <button type="submit" class="submit-button" [disabled]="staffForm.invalid || isSubmitting">
+                @if (isSubmitting) {
+                <span class="button-spinner"></span>
+                <span>Adding...</span>
+                } @else {
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>Add Staff</span>
+                }
+            </button>
+        </footer>
+
+    </form>
+
+</div>

@@ -1,3 +1,20 @@
+.account-info {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.account-info strong {
+  color: #f8fafc;
+  font-size: 13px;
+}
+
+.account-info span {
+  color: #94a3b8;
+  font-size: 11.5px;
+}
+
 .navbar {
   height: 72px;
 
@@ -9,7 +26,7 @@
 
   align-items: center;
 
-  background: #161F2F;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(11, 25, 42, 0.96) 55%);
 
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 

@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { CurrentUserService } from '../../../core/services/current-user.service';
 
 import {
   FormBuilder,
@@ -18,9 +19,11 @@ import { Router } from '@angular/router';
 export class Login {
   showPassword = false;
   isLoading = false;
+  loginError = '';
 
   private fb = inject(FormBuilder);
   private router = inject(Router)
+  private currentUserService = inject(CurrentUserService);
 
   loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -40,23 +43,31 @@ export class Login {
       return;
     }
 
+    this.loginError = '';
+    this.isLoading = true;
+
     const credentials = this.loginForm.getRawValue();
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        console.log('Login Successful')
-        sessionStorage.setItem(
-          'access_token',
-          response.access_token
-        );
-        this.router.navigate(['/dashboard'])
-        console.log('JWT stored successfully')
+        sessionStorage.setItem('access_token', response.access_token);
+
+        this.currentUserService.fetchCurrentUser().subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.router.navigate(['/dashboard']);
+          },
+          error: () => {
+            this.isLoading = false;
+            this.router.navigate(['/dashboard']);
+          }
+        });
       },
       error: (error) => {
-        console.error("Login Failed:", error)
+        console.error('Login Failed:', error);
+        this.isLoading = false;
+        this.loginError = 'Invalid email or password.';
       }
     })
   }
 }
-
-
