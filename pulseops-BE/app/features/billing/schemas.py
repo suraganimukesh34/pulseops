@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class InvoiceItem(BaseModel):
@@ -22,3 +22,5 @@ class InvoiceUpdate(InvoiceCreate):
 class InvoiceResponse(InvoiceCreate):
     id: str
     total_amount: float
+
+    model_config = ConfigDict(from_attributes=True)

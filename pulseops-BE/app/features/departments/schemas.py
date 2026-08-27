@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class DepartmentCreate(BaseModel):
@@ -16,3 +16,5 @@ class DepartmentUpdate(DepartmentCreate):
 
 class DepartmentResponse(DepartmentCreate):
     id: str
+
+    model_config = ConfigDict(from_attributes=True)

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class StaffCreate(BaseModel):
@@ -19,3 +19,5 @@ class StaffUpdate(StaffCreate):
 
 class StaffResponse(StaffCreate):
     id: str
+
+    model_config = ConfigDict(from_attributes=True)

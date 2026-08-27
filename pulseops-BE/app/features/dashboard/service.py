@@ -1,5 +1,7 @@
 from datetime import date
 
+from sqlalchemy.orm import Session
+
 from app.features.alerts.service import get_alerts
 from app.features.appointments.service import get_appointments
 from app.features.beds.service import get_beds
@@ -11,15 +13,15 @@ from app.features.patients.service import get_patients
 from app.features.staff.service import get_staff
 
 
-def get_dashboard_summary() -> DashboardSummary:
-    patients = get_patients()
-    beds = get_beds()
-    staff = get_staff()
-    appointments = get_appointments()
-    alerts = get_alerts()
-    invoices = get_invoices()
-    items = get_items()
-    departments = get_departments()
+def get_dashboard_summary(db: Session) -> DashboardSummary:
+    patients = get_patients(db)
+    beds = get_beds(db)
+    staff = get_staff(db)
+    appointments = get_appointments(db)
+    alerts = get_alerts(db)
+    invoices = get_invoices(db)
+    items = get_items(db)
+    departments = get_departments(db)
 
     total_beds = len(beds)
     occupied_beds = sum(1 for b in beds if b.status == "Occupied")

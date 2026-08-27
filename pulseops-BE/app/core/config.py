@@ -15,6 +15,11 @@ class Settings:
 
     cors_allow_origins: list[str] = ["http://localhost:4200"]
 
+    gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
+
+    database_url: str = os.getenv("DATABASE_URL", "")
+
 
 settings = Settings()
 

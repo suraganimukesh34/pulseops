@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class BedCreate(BaseModel):
@@ -15,6 +15,8 @@ class BedUpdate(BedCreate):
 
 class BedResponse(BedCreate):
     id: str
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class BedAdmitRequest(BaseModel):

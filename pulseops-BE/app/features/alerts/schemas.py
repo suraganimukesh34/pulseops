@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class AlertCreate(BaseModel):
@@ -18,3 +18,5 @@ class AlertUpdate(AlertCreate):
 
 class AlertResponse(AlertCreate):
     id: str
+
+    model_config = ConfigDict(from_attributes=True)

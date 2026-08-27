@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class InventoryItemCreate(BaseModel):
@@ -17,6 +17,8 @@ class InventoryItemUpdate(InventoryItemCreate):
 
 class InventoryItemResponse(InventoryItemCreate):
     id: str
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class RestockRequest(BaseModel):

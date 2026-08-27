@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class AIPatientSummaryResponse(BaseModel):
@@ -65,3 +65,5 @@ class PatientResponse(BaseModel):
     symptoms: str
     contact_number: str
     blood_group: str
+
+    model_config = ConfigDict(from_attributes=True)

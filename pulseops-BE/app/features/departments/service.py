@@ -1,72 +1,37 @@
+from app.features.departments.models import Department
 from app.features.departments.schemas import (
     DepartmentCreate,
-    DepartmentResponse,
     DepartmentUpdate,
 )
-
-departments: list[DepartmentResponse] = [
-    DepartmentResponse(
-        id="D1", name="Cardiology", floor=3, head_doctor_id="S101",
-        head_doctor_name="Dr. Sarah Smith", bed_capacity=5, status="Active",
-    ),
-    DepartmentResponse(
-        id="D2", name="Neurology", floor=4, head_doctor_id="S102",
-        head_doctor_name="Dr. Michael Brown", bed_capacity=5, status="Active",
-    ),
-    DepartmentResponse(
-        id="D3", name="Pulmonology", floor=3, head_doctor_id="S103",
-        head_doctor_name="Dr. David Wilson", bed_capacity=5, status="Active",
-    ),
-    DepartmentResponse(
-        id="D4", name="Orthopedics", floor=2, head_doctor_id="S104",
-        head_doctor_name="Dr. James Anderson", bed_capacity=5, status="Active",
-    ),
-    DepartmentResponse(
-        id="D5", name="General Medicine", floor=2, head_doctor_id="S105",
-        head_doctor_name="Dr. Emily Davis", bed_capacity=5, status="Active",
-    ),
-    DepartmentResponse(
-        id="D6", name="Emergency", floor=1, head_doctor_id="S106",
-        head_doctor_name="Dr. Daniel Thomas", bed_capacity=8, status="Active",
-    ),
-    DepartmentResponse(
-        id="D7", name="Oncology", floor=5, head_doctor_id="S107",
-        head_doctor_name="Dr. Christopher Lee", bed_capacity=4, status="Active",
-    ),
-    DepartmentResponse(
-        id="D8", name="Geriatrics", floor=4, head_doctor_id="S108",
-        head_doctor_name="Dr. Lisa Martin", bed_capacity=4, status="Active",
-    ),
-]
-
-_next_seq = len(departments) + 1
+from sqlalchemy.orm import Session
 
 
-def _next_id() -> str:
-    global _next_seq
-    department_id = f"D{_next_seq}"
-    _next_seq += 1
-    return department_id
+def _next_id(db: Session) -> str:
+    existing_ids = [d.id for d in db.query(Department.id).all()]
+    max_num = max((int(id_.lstrip("D")) for id_ in existing_ids), default=0)
+    return f"D{max_num + 1}"
 
 
-def get_departments() -> list[DepartmentResponse]:
-    return departments
+def get_departments(db: Session) -> list[Department]:
+    return db.query(Department).all()
 
 
-def get_department_by_id(department_id: str) -> DepartmentResponse | None:
-    return next((d for d in departments if d.id == department_id), None)
+def get_department_by_id(db: Session, department_id: str) -> Department | None:
+    return db.query(Department).filter(Department.id == department_id).first()
 
 
-def create_department(department: DepartmentCreate) -> DepartmentResponse:
-    new_department = DepartmentResponse(id=_next_id(), **department.model_dump())
-    departments.append(new_department)
+def create_department(db: Session, department: DepartmentCreate) -> Department:
+    new_department = Department(id=_next_id(db), **department.model_dump())
+    db.add(new_department)
+    db.commit()
+    db.refresh(new_department)
     return new_department
 
 
 def update_department(
-    department_id: str, department: DepartmentUpdate
-) -> DepartmentResponse | None:
-    existing = get_department_by_id(department_id)
+    db: Session, department_id: str, department: DepartmentUpdate
+) -> Department | None:
+    existing = get_department_by_id(db, department_id)
 
     if existing is None:
         return None
@@ -74,14 +39,17 @@ def update_department(
     for field, value in department.model_dump().items():
         setattr(existing, field, value)
 
+    db.commit()
+    db.refresh(existing)
     return existing
 
 
-def delete_department(department_id: str) -> DepartmentResponse | None:
-    department = get_department_by_id(department_id)
+def delete_department(db: Session, department_id: str) -> Department | None:
+    department = get_department_by_id(db, department_id)
 
     if department is None:
         return None
 
-    departments.remove(department)
+    db.delete(department)
+    db.commit()
     return department
