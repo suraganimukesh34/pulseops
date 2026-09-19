@@ -15,3 +15,8 @@ export interface AIInsightsResponse {
   generated: boolean;
   insights: AIInsight[];
 }
+
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  text: string;
+}

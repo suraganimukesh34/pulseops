@@ -18,4 +18,20 @@ export class AiService {
   getInsights(): Observable<AIInsightsResponse> {
     return this.http.get<AIInsightsResponse>(`${this.apiUrl}/insights`);
   }
+
+  async streamChat(sessionId: string ,message: string, onChunk: (text: string) => void): Promise<void> {
+    const token = sessionStorage.getItem('access_token');
+    const url = `${this.apiUrl}/chat/stream?message=${encodeURIComponent(message)}&session_id=${sessionId}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      onChunk(decoder.decode(value, { stream: true }));
+    }
+  }
 }

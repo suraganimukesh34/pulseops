@@ -17,3 +17,11 @@ class AIInsight(BaseModel):
 class AIInsightsResponse(BaseModel):
     generated: bool
     insights: list[AIInsight]
+
+
+class ChatRequest(BaseModel):
+    message: str
+
+
+class ChatResponse(BaseModel):
+    reply: str

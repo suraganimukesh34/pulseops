@@ -5,12 +5,53 @@
             <mat-icon>smart_toy</mat-icon>
         </div>
         <div class="hero-text">
-            <div class="hero-badge">Preview — Coming Soon</div>
+            <div class="hero-badge" [class.hero-badge-live]="aiAvailable">{{ aiAvailable ? 'Live' : 'Preview — Coming Soon' }}</div>
             <h2>PulseOps AI Copilot</h2>
             <p>{{ statusMessage }}</p>
         </div>
     </div>
 
+    <div class="chat-panel">
+        <div class="chat-log" #chatLog>
+            <div class="chat-empty" *ngIf="!messages.length">
+                <mat-icon>forum</mat-icon>
+                <p>Ask about beds, patients, appointments, staffing or inventory.</p>
+                <div class="suggestion-row">
+                    <button type="button" class="suggestion-chip" *ngFor="let s of suggestions" (click)="useSuggestion(s)">
+                        {{ s }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="msg-row" *ngFor="let m of messages" [class.msg-row-user]="m.role === 'user'">
+                <div class="msg-avatar" [class.msg-avatar-user]="m.role === 'user'">
+                    <mat-icon>{{ m.role === 'user' ? 'person' : 'smart_toy' }}</mat-icon>
+                </div>
+                <div class="msg-bubble" [class.msg-bubble-user]="m.role === 'user'">
+                    <span *ngIf="m.text">{{ m.text }}</span>
+                    <span class="typing-dots" *ngIf="!m.text && m.role === 'assistant' && sending">
+                        <i></i><i></i><i></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <form class="chat-input-row" (ngSubmit)="send()">
+            <input
+                type="text"
+                name="draft"
+                autocomplete="off"
+                placeholder="Ask the AI Copilot a question..."
+                [(ngModel)]="draft"
+                [disabled]="sending"
+            />
+            <button type="submit" class="send-btn" [disabled]="sending || !draft.trim()">
+                <mat-icon>send</mat-icon>
+            </button>
+        </form>
+    </div>
+
+    <h3 class="section-label">What's coming next</h3>
     <div class="insight-grid">
         <div class="insight-card" *ngFor="let insight of insights">
             <div class="insight-header">
