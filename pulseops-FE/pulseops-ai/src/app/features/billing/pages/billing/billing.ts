@@ -80,7 +80,7 @@ export class BillingComponent implements OnInit {
   }
 
   get pendingAmountFormatted(): string {
-    return `$${this.pendingAmount.toLocaleString()}`;
+    return `₹${this.pendingAmount.toLocaleString('en-IN')}`;
   }
 
   get overdueCount(): number {

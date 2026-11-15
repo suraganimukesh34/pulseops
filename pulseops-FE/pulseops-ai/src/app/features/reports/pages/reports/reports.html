@@ -39,7 +39,7 @@
                     'badge-danger': row.status === 'Overdue'
                 }">{{ row.status }}</span>
                 <span class="billing-count">{{ row.count }} invoices</span>
-                <strong class="billing-total">${{ row.total.toFixed(2) }}</strong>
+                <strong class="billing-total">{{ formatCurrency(row.total) }}</strong>
             </div>
         </div>
 

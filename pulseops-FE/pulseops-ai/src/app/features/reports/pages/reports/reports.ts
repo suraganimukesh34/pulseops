@@ -32,6 +32,10 @@ export class ReportsComponent implements OnInit {
   billingBreakdown: BillingBreakdown[] = [];
   lowStockItems: InventoryItem[] = [];
 
+  formatCurrency(value: number): string {
+    return `₹${value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
   constructor(private pageHeader: PageHeaderService) {
     this.pageHeader.setHeader('Reports', 'Operational Analytics & Breakdowns');
   }

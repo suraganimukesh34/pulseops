@@ -1,11 +1,11 @@
 from app.features.settings.schemas import HospitalProfile
 
 hospital_profile = HospitalProfile(
-    hospital_name="PulseOps General Hospital",
-    address="1200 Wellness Avenue, Springfield",
-    phone="+1 555-010-2000",
-    email="contact@pulseops.ai",
-    timezone="America/Chicago",
+    hospital_name="PulseOps Multispeciality Hospital",
+    address="Indiranagar, Bengaluru, Karnataka 560038, India",
+    phone="+91 80 4000 1200",
+    email="contact@pulseops.example",
+    timezone="Asia/Kolkata",
     app_name="PulseOps AI",
     logo_icon="monitor_heart",
     accent_color="#0d9488",
